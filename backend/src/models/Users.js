@@ -28,3 +28,21 @@ const userSchema = new mongoose.Schema({
     default: 'https://placehold.co/150x150/cccccc/000000?text=Avatar'
   }
 }, {timestamps : true}) // timestamp to track creation date and updated date
+
+// i used this pre save hook to hask pawsord before saving to the database
+// and also this refers to the current doc being saved in db
+userSchema.pre("save", async (next)=>{
+  // only hash the pasword if it have been modified or if is new
+  if (!this.isModified("password")){
+    return next();
+  }
+  try {
+    // generate a rendom salt with ten rounds of hashing
+    const salt = await bcrypt.genSalt(10);
+    this.password =await bcrypt.hash(this.password, salt);
+    next(); //continue the save operation
+  }catch(err) {
+    next(err);
+  }
+});
+
