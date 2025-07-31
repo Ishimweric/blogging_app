@@ -1,8 +1,6 @@
 import dotenv from "dotenv"
 import express from "express"
 import { connectDB } from "./config/db.js";
-import cors from "cors"
-import path from "path"
 import authRoutes from "./routes/authRoute.js"
 
 dotenv.config();
@@ -20,3 +18,10 @@ connectDB().then(()=>{
   process.exit(1); // exit if db fails
 });
 
+// middlewares
+// builtin
+app.use(express.json());
+
+//custom
+// use auth routes on this endpoint
+app.use("/api/auth", authRoutes);
