@@ -55,3 +55,35 @@ const signupUser = async (req, res)=>{
     res.status(500).json({"message" : "server error during signing you up"})
   }
 };
+
+// function to login users
+const loginUser = async()=>{
+  // get email n password from req body
+  const {email, password} = req.body;
+
+  // check if both email n passowrd are provided
+  if (!email || !password){
+    return res.status(400).json({"message" : "All field are required"})
+  }
+
+  try {
+    // get user by email
+    const user = User.findOne({email});
+
+    //check if user exists and if password is valid
+    if (user && await user.comparePassword(password)){
+      res.status(200).json({
+        "message" : "logged in successfully",
+        "_id" : user._id,
+        "name" : user.username,
+        "email" : user.email,
+        "token" : generateToken(user._id) // generate and send jwt
+      })
+    }else{
+      res.status(401).json({"error" : "Invalid credentials"});
+    }
+  }catch (err) {
+    console.error("Login error", err.message);
+    res.status(500).json({"error" : "Server error, failed to log you in"})
+  }
+};
