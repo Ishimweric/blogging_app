@@ -87,3 +87,19 @@ const loginUser = async()=>{
     res.status(500).json({"error" : "Server error, failed to log you in"})
   }
 };
+
+// function to get info of loggedin user
+const getLoggedInUser = async ()=>{
+  // if prtect middleware succesfully attachs req.user, it means token is correct
+  if (req.user){
+    res.status(200).json({
+      "_id" : req.user._id,
+      "username" : req.user.username,
+      "email" : req.user.email,
+      "avatar" : req.user.avatar
+    });
+  }else{
+    // btw this shouldn't be hit if middleware if functioning well
+    res.status(404).json({"error" : "User not found"})
+  }
+}
