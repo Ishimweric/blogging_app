@@ -47,7 +47,7 @@ userSchema.pre("save", async function(next){
 });
 
 // method to compare the new pswrd with the one in the db
-userSchema.methods.comparePassword = async (enteredPassword)=>{
+userSchema.methods.comparePassword = async function(enteredPassword){
   return await bcrypt.compare(enteredPassword, this.password);
 }
 
