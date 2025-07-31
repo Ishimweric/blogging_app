@@ -46,3 +46,11 @@ userSchema.pre("save", async (next)=>{
   }
 });
 
+// method to compare the new pswrd with the one in the db
+userSchema.methods.comparePassword = async (enteredPassword)=>{
+  return await bcrypt.compare(enteredPassword, this.password);
+}
+
+// create User model
+const User = mongoose.model("User", userSchema);
+export default User
