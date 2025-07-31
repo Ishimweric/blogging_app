@@ -127,3 +127,5 @@ const requestPasswordReset = async(req, res)=>{
     res.status(500).json({"error" : "server error during password reset"})
   }
 }
+
+export {signupUser, loginUser, getLoggedInUser, requestPasswordReset}
