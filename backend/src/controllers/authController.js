@@ -1,7 +1,6 @@
 import User from "../models/Users.js"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-import { use } from "react";
 
 dotenv.config(); //load env variables
 
