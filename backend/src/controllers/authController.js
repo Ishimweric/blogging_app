@@ -67,10 +67,9 @@ const loginUser = async(req, res)=>{
 
   try {
     // get user by email
-    const user = User.findOne({email});
-
+    const user = await User.findOne({email});
     //check if user exists and if password is valid
-    if (user && await user.comparePassword(password)){
+    if (user && (await user.comparePassword(password))){
       res.status(200).json({
         "message" : "logged in successfully",
         "_id" : user._id,
@@ -83,7 +82,7 @@ const loginUser = async(req, res)=>{
     }
   }catch (err) {
     console.error("Login error", err.message);
-    res.status(500).json({"error" : "Server error, failed to log you in"})
+    res.status(500).json({"error" : `Server error, failed to log you in: ${err.message}`})
   }
 };
 
