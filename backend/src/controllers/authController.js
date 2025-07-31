@@ -57,7 +57,7 @@ const signupUser = async (req, res)=>{
 };
 
 // function to login users
-const loginUser = async()=>{
+const loginUser = async(req, res)=>{
   // get email n password from req body
   const {email, password} = req.body;
 
@@ -89,7 +89,7 @@ const loginUser = async()=>{
 };
 
 // function to get info of loggedin user
-const getLoggedInUser = async ()=>{
+const getLoggedInUser = async (req, res)=>{
   // if prtect middleware succesfully attachs req.user, it means token is correct
   if (req.user){
     res.status(200).json({
@@ -101,5 +101,29 @@ const getLoggedInUser = async ()=>{
   }else{
     // btw this shouldn't be hit if middleware if functioning well
     res.status(404).json({"error" : "User not found"})
+  }
+};
+
+// password reset function
+const requestPasswordReset = async(req, res)=>{
+  const {email} = req.body;
+
+  if (!email){
+    return res.status(400).json({"message" : "Email required br"})
+  }
+
+  try {
+    const user = await User.findOne({email});
+
+    if(!user){
+      // say that you've sent a link even if you don't for security purposes
+      res.status(200).json({"message": "password reset link sent if the user exists"})
+    }
+
+    // this is a demo, very basic it doesn't actually send the message
+    res.status(200).json({"message": "password reset link sent if the user exists"})
+  }catch (err) {
+    console.error("password reset error", err.message);
+    res.status(500).json({"error" : "server error during password reset"})
   }
 }
