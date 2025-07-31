@@ -51,7 +51,7 @@ const signupUser = async (req, res)=>{
     }
   }catch (err) {
     console.error("signup error");
-    res.status(500).json({"message" : "server error during signing you up"})
+    res.status(500).json({"message" : `server error during signing you up : ${err.message}`})
   }
 };
 

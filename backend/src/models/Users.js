@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
 
 // i used this pre save hook to hask pawsord before saving to the database
 // and also this refers to the current doc being saved in db
-userSchema.pre("save", async (next)=>{
+userSchema.pre("save", async function(next){
   // only hash the pasword if it have been modified or if is new
   if (!this.isModified("password")){
     return next();
