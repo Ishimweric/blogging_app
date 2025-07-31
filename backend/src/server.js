@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import express from "express"
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoute.js"
+import rateLimiter from "./middlewares/rateLimiter.js";
 
 dotenv.config();
 
@@ -23,5 +24,7 @@ connectDB().then(()=>{
 app.use(express.json());
 
 //custom
+// use rate limiter middleware to limit nbr of requests a use can make 
+app.use(rateLimiter)
 // use auth routes on this endpoint
 app.use("/api/auth", authRoutes);

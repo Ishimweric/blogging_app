@@ -12,3 +12,5 @@ const rateLimiter = async (req, res, next)=>{
     next(err);
   }
 }
+
+export default rateLimiter
