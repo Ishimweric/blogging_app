@@ -1,11 +1,14 @@
+import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState("")
   const [currentPassword, setCurrentPassword] = useState("");
   const [isLoading, setisLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async(e)=>{
     e.preventDefault();
@@ -28,6 +31,28 @@ const ResetPasswordPage = () => {
       toast.error("Password must have atleast 8 characters!");
       setisLoading(false);
       return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3500/api/auth/reset-password", {
+        currentPassword,
+        newPassword
+      });
+
+      if (response.status === 200){
+        toast.success("Password changed successfully!");
+        navigate("/login");
+      }
+    } catch (err) {
+      setisLoading(false);
+      if (err.response){
+        toast.error(err.response.data.message);
+      }else{
+        toast.error("An unexpected error occured, please try again!");
+      }
+      console.error("Password reset error", err.message)
+    }finally{
+      setisLoading(false);
     }
   }
   return (
