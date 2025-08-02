@@ -4,17 +4,20 @@ import { Toaster } from 'react-hot-toast';
 import LoginPage from "./pages/LoginPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/AuthContext";
 
 const App = () => {
   return (
     <Router>
       <Toaster/>
-      <Navbar/>
-      <Routes>
-        <Route path="/signup" element={<SignupPage/>}/>
-        <Route path="/login" element={<LoginPage/>}/>
-        <Route path="/reset-password" element={<ResetPasswordPage/>}/>
-      </Routes>
+      <AuthProvider>
+        <Navbar/>
+        <Routes>
+          <Route path="/signup" element={<SignupPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/reset-password" element={<ResetPasswordPage/>}/>
+        </Routes>
+      </AuthProvider>
     </Router>
   )
 }
