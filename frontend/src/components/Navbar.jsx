@@ -29,12 +29,12 @@ const Navbar = () => {
     localStorage.setItem("theme", isDarkmode?"dark":"light")
   }, [isDarkmode]);
 
-  // check authentication status when app starts or localhost changes
+  // check authentication status when app starts or localstorage changes
   useEffect(()=>{
     const checkAuthStatus = ()=>{
       const token = localStorage.getItem("token");
       const userInfo= localStorage.getItem("userInfo");
-      if (token, userInfo){
+      if (token && userInfo){
         try {
           const user = JSON.parse(userInfo);
           setIsLoggedIn(true);
@@ -110,7 +110,7 @@ const Navbar = () => {
             <div className="relative group">
               <Link to="/dashboard" className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                 <User size={24} className="rounded-full bg-gray-200 dark:bg-gray-700 p-1" />
-                <span className="font-medium hidden lg:inline">{username}</span> {/* to show usernames on larger screens*/}
+                <span className="font-medium hidden md:inline">{username}</span> {/* to show usernames on larger screens*/}
               </Link>
               {/* Optional: Dropdown for more profile options*/}
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out transform scale-95 group-hover:scale-100 origin-top-right">
