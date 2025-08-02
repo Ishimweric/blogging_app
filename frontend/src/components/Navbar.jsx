@@ -14,7 +14,11 @@ const Navbar = () => {
     return false
   })
   return (
-    <nav>navbar</nav>
+    <nav className="bg-white dark:text-white text-black dark:bg-gray-900 sticky top-0 shadow-md p-4 z-50 transition-colors duration-300 ease-in-out">
+      <div>
+        navbar
+      </div>
+    </nav>
   )
 }
 
