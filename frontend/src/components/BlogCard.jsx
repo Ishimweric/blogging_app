@@ -3,7 +3,10 @@ import { FaRegHeart, FaRegComment } from 'react-icons/fa';
 
 const BlogCard = ({ post, onSelectPost }) => {
   return (
-    <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+    <div 
+      className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+      onClick={() => onSelectPost(post)}  // Make entire card clickable
+    >
       <img
         src={post.image}
         alt="Blog post"
@@ -33,7 +36,10 @@ const BlogCard = ({ post, onSelectPost }) => {
         </div>
 
         <button
-          onClick={() => onSelectPost(post)}
+          onClick={(e) => {
+            e.stopPropagation();  // Prevent card click from triggering
+            onSelectPost(post);
+          }}
           className="inline-block mt-2 text-white bg-gray-800 px-4 py-1 text-sm rounded hover:bg-black"
         >
           Read more
