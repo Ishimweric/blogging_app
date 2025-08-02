@@ -28,7 +28,7 @@ const staticPosts = [
     isRecent: true
   },
   {
-    image: 'https://images.unsplash.com/photo-1606788075761-658b1c18e0b4',
+    image: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7',
     title: 'How to build responsive UI with Tailwind',
     summary: `Tailwind makes it super fast to build modern websites. Here's a basic guide to get you started…`,
     author: 'Elyas',
