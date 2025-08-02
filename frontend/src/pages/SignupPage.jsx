@@ -5,16 +5,73 @@ const SignupPage = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassord] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setisLoading] = useState(false)
 
   // define handle submit function
   const handleSubmit = ()=>{}
   return (
-    <section className="min-h-screen bg-gray-100 flex flex-col justify-center p-4">
+    <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">NoteDown</h2>
-        <form></form>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            {/* for username */}
+            <input 
+              type='text' 
+              placeholder="username"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:ring-2"
+              value={userName}
+              onChange={(e)=>setUserName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            {/* for email */}
+            <input
+              type='email'
+              placeholder="E-mail"
+              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            {/* for password */}
+            <input
+              type='password'
+              placeholder="Create password"
+              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            {/* for password confirmation */}
+            <input
+              type='password'
+              placeholder="Re-enter password"
+              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              value={confirmPassword}
+              onChange={(e)=>setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* signup button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-600"
+            disabled = {isLoading}
+          >
+            {isLoading? "submitting..." :"Sign Up"}
+          </button>
+        </form>
       </div>
     </section>
   )
