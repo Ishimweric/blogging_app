@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
   // declare state controllers
-  const [userName, setUserName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,7 +19,7 @@ const SignupPage = () => {
     setisLoading(true);
 
     //form validation
-    if (!userName.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()){
+    if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()){
       toast.error("All fields are required", {
         duration : 4000
       })
@@ -44,7 +44,7 @@ const SignupPage = () => {
     // make api calls to backend
     try {
       const response = await axios.post("http://localhost:3500/api/auth/signup", {
-        userName,
+        username,
         email,
         password
       });
@@ -56,7 +56,7 @@ const SignupPage = () => {
       }
     }catch (err) {
       setisLoading(false);
-      toast.error("Signup error!");
+      toast.error(err.response.data.message || "Signup error!");
       console.error("Signup error", err.message)
     }finally{
       setisLoading(false)
@@ -73,7 +73,7 @@ const SignupPage = () => {
               type='text' 
               placeholder="username"
               className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:ring-2"
-              value={userName}
+              value={username}
               onChange={(e)=>setUserName(e.target.value)}
               required
             />
