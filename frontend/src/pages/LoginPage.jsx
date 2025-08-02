@@ -32,7 +32,7 @@ const LoginPage = () => {
       console.log(response.status)
       //handle responses
       if (response.status === 200){
-        toast.message("Logged in successfully!");
+        toast.success("Logged in successfully!");
         // store the token and the user infos in the localstorage
         localStorage.setItem("token", response.data.token); // store the token
         localStorage.setItem("userInfo", JSON.stringify({
