@@ -56,11 +56,11 @@ const ResetPasswordPage = () => {
     }
   }
   return (
-    <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
-      <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
-        <h2 className="text-3xl font-bold mb-2 text-gray-800">NoteDown</h2>
+    <section className="min-h-screen bg-gray-100 dark:bg-gray-800 flex flex-col justify-center items-center p-4">
+      <div className="p-8 bg-white dark:bg-gray-900 rounded-lg max-w-md w-full text-center">
+        <h2 className="text-3xl font-bold mb-2 text-gray-800 dark:text-white">NoteDown</h2>
         <div className=" w-2/3 mx-auto">
-          <p className="font-semibold text-gray-500 mb-6 text-center">Share thoughts, spark conversations!</p>
+          <p className="font-semibold text-gray-500 dark:text-gray-400 mb-6 text-center">Share thoughts, spark conversations!</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
 

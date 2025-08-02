@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import {Menu, Moon, Sun, User, X} from "lucide-react"
-import toast from "react-hot-toast";
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUserName] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDarkmode,setIsDarkmode] = useState(()=>{
     //set darkmode to from localstorage pr default to light
@@ -18,6 +16,7 @@ const Navbar = () => {
   })
 
   const navigate = useNavigate()
+  const { isLoggedIn, user, logout, isLoadingAuth } = useAuth();
   
   //apply themes to body
   useEffect(()=>{
@@ -29,55 +28,21 @@ const Navbar = () => {
     localStorage.setItem("theme", isDarkmode?"dark":"light")
   }, [isDarkmode]);
 
-  // check authentication status when app starts or localstorage changes
-  useEffect(()=>{
-    const checkAuthStatus = ()=>{
-      const token = localStorage.getItem("token");
-      const userInfo= localStorage.getItem("userInfo");
-      if (token && userInfo){
-        try {
-          const user = JSON.parse(userInfo);
-          setIsLoggedIn(true);
-          setUserName(user.username);
-        }catch(err) {
-          console.error("Failed to get userinfo from localhost!");
-          setIsLoggedIn(false);
-          setUserName("");
-          localStorage.removeItem("token");
-          localStorage.removeItem("userInfo")
-        }
-      }else{
-        setIsLoggedIn(false);
-        setUserName("");
-      }
-    }
-
-    checkAuthStatus();
-
-    //listen for changes in localstorage
-    window.addEventListener("storage", checkAuthStatus);
-
-    // remove the remove event listener to remove memory leaks
-    return ()=>{
-      window.removeEventListener("storage", checkAuthStatus)
-    }
-  },[])
-
-  const handleLogout = ()=>{
-    localStorage.removeItem("token");
-    localStorage.removeItem("userInfo")
-    setIsLoggedIn(false);
-    setUserName("");
-    toast.success("Successfully logged out!");
-    navigate("/login")
-  }
+  const handleLogout = () => {
+    logout(); // call logout function from AuthContext
+    navigate('/login'); // redirect to login page after logout
+  };
 
   const toggleTheme = ()=>{
-    setIsDarkmode(!isDarkmode);
+    setIsDarkmode(prev=>!prev);
   };
   const toggleMobileMenu = ()=>{
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen(prev => !prev);
   };
+
+  if (isLoadingAuth) {
+    return null; // a simple loading spinner for the navbar
+  }
 
   return (
     <nav className="bg-white dark:text-white text-black dark:bg-gray-900 sticky top-0 shadow-md p-4 z-50 transition-colors duration-300 ease-in-out">
@@ -110,7 +75,7 @@ const Navbar = () => {
             <div className="relative group">
               <Link to="/dashboard" className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                 <User size={24} className="rounded-full bg-gray-200 dark:bg-gray-700 p-1" />
-                <span className="font-medium hidden md:inline">{username}</span> {/* to show usernames on larger screens*/}
+                <span className="font-medium hidden md:inline">{user?.username}</span> {/* to show usernames on larger screens*/}
               </Link>
               {/* Optional: Dropdown for more profile options*/}
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out transform scale-95 group-hover:scale-100 origin-top-right">

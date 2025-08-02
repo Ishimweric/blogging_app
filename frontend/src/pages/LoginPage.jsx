@@ -84,7 +84,7 @@ const LoginPage = () => {
             <input
               type='password'
               placeholder="Password"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 py-2 border text-gray-900 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={password}
               onChange={(e)=>setPassword(e.target.value)}
               required
@@ -104,7 +104,7 @@ const LoginPage = () => {
         <div className="flex justify-between mt-4">
           {/* password forgot link */}
           <div>
-            <Link to={"/reset-pawword"} className="text-blue-600 hover:underline text-sm"> Forgot password?</Link>
+            <Link to={"/reset-password"} className="text-blue-600 hover:underline text-sm"> Forgot password?</Link>
           </div>
 
           {/* create account link */}
