@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast';
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
   // declare state controllers
@@ -10,6 +11,8 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setisLoading] = useState(false)
 
+  const navigate = useNavigate()
+
   // define handle submit function
   const handleSubmit = async(e)=>{
     e.preventDefault(); //primarily to prevent reloading
@@ -17,28 +20,46 @@ const SignupPage = () => {
 
     //form validation
     if (!userName.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()){
-      toast.error("All fields are required")
+      toast.error("All fields are required", {
+        duration : 4000
+      })
       setisLoading(false);
       return;
     }
 
     if(password.trim() !== confirmPassword.trim()){
-      toast.error("Passwords do not match!");
+      toast.error("Passwords do not match!", {
+        duration : 4000
+      });
       setisLoading(false);
       return;
     }
 
     if (password.trim().length < 8){
-      toast.error("Password must be atleast 8 characters long!")
+      toast.error("Password must be atleast 8 characters long!");
+      setisLoading(false);
+      return;
     }
 
     // make api calls to backend
     try {
       const response = await axios.post("http://localhost:3500/api/auth/signup", {
-        
-      })
+        userName,
+        email,
+        password
+      });
+
+      // handle successful signup
+      if (response.status === 201){
+        toast.success("Sign up successful!");
+        // navigate("/login");
+      }
     }catch (err) {
-      
+      setisLoading(false);
+      toast.error("Signup error!");
+      console.error("Signup error", err.message)
+    }finally{
+      setisLoading(false)
     }
   }
   return (
