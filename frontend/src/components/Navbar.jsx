@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {Menu, Moon, Sun, User, X} from "lucide-react"
 import { useAuth } from '../context/AuthContext';
 
-const Navbar = () => {
+const Navbar = ({ toggleSidebar }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isDarkmode,setIsDarkmode] = useState(()=>{
     //set darkmode to from localstorage pr default to light
@@ -47,8 +47,20 @@ const Navbar = () => {
   return (
     <nav className="bg-white dark:text-white text-black dark:bg-gray-900 sticky top-0 shadow-md p-4 z-50 transition-colors duration-300 ease-in-out">
       <div className="container flex justify-between mx-auto items-center">
-        {/* the logo */}
-        <Link to={"/"} className="text-2xl text-gray-800 font-bold dark:text-white hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200">NoteDown</Link>
+        {/* Sidebar Toggle Button is visible on mobile, hidden on larger screens where sidebar is always cisible */}
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={toggleSidebar} // This button toggles the main sidebar
+            className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Toggle Sidebar"
+          >
+            <Menu size={24} />
+          </button>
+          {/* Single NoteDown Logo */}
+          <Link to="/" className="text-2xl font-bold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+            NoteDown
+          </Link>
+        </div>
 
         {/* dark mode toggle and the mobile menu */}
         <div className="md:hidden flex items-center space-x-4">
