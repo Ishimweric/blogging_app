@@ -75,9 +75,7 @@ const SinglePost = ({ post, onBack }) => {
       <article className="space-y-6">
         <div className="flex justify-between items-start">
           <h1 className="text-3xl font-bold">{post.title}</h1>
-          <span className="px-3 py-1 bg-gray-100 rounded-full text-sm">
-            {post.category}
-          </span>
+         
         </div>
         
         <div className="flex items-center gap-2 text-sm text-gray-600">
