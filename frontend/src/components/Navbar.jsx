@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import {Menu, Moon, Sun, User, X} from "lucide-react"
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,6 +16,58 @@ const Navbar = () => {
 
     return false
   })
+  
+  //apply themes to body
+  useEffect(()=>{
+    if (isDarkmode){
+      document.documentElement.classList.add("dark");
+    }else{
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", isDarkmode?"dark":"light")
+  }, [isDarkmode]);
+
+  // check authentication status when app starts or localhost changes
+  useEffect(()=>{
+    const checkAuthStatus = ()=>{
+      const token = localStorage.getItem("token");
+      const userInfo= localStorage.getItem("userInfo");
+      if (token, userInfo){
+        try {
+          const user = JSON.parse(userInfo);
+          setIsLoggedIn(true);
+          setUserName(user.username);
+        }catch(err) {
+          console.error("Failed to get userinfo from localhost!");
+          setIsLoggedIn(false);
+          setUserName("");
+          localStorage.removeItem("token");
+          localStorage.removeItem("userInfo")
+        }
+      }else{
+        setIsLoggedIn(false);
+        setUserName("");
+      }
+    }
+
+    checkAuthStatus();
+
+    //listen for changes in localstorage
+    window.addEventListener("storage", checkAuthStatus);
+
+    // remove the remove event listener to remove memory leaks
+    return ()=>{
+      window.removeEventListener("storage", checkAuthStatus)
+    }
+  },[])
+
+  const handleLogout = ()=>{
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo")
+    setIsLoggedIn(false);
+    setUserName("");
+    toast.success("Successfully logged out!")
+  }
 
   const toggleTheme = ()=>{
     setIsDarkmode(!isDarkmode);
