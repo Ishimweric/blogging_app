@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { FaRegHeart, FaRegComment, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import { FaRegHeart, FaHeart, FaRegComment, FaArrowLeft, FaChevronDown } from 'react-icons/fa';
 
 const SinglePost = ({ post, onBack }) => {
+  // Like functionality
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likes);
+  
+  // Comment functionality
   const [showAllComments, setShowAllComments] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [commentCount, setCommentCount] = useState(post.comments);
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -18,29 +24,15 @@ const SinglePost = ({ post, onBack }) => {
       name: 'Michael Chen',
       date: '1 week ago',
       text: 'Thanks for sharing this valuable information!'
-    },
-    {
-      id: 3,
-      avatar: 'https://randomuser.me/api/portraits/women/45.jpg',
-      name: 'Emma Wilson',
-      date: '3 days ago',
-      text: 'This was really helpful, thanks!'
-    },
-    {
-      id: 4,
-      avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
-      name: 'David Kim',
-      date: '5 days ago',
-      text: 'I have a question about the third point you made...'
-    },
-    {
-      id: 5,
-      avatar: 'https://randomuser.me/api/portraits/women/63.jpg',
-      name: 'Lisa Wong',
-      date: '1 day ago',
-      text: 'Could you elaborate more on this topic?'
     }
   ]);
+
+  const handleLike = () => {
+    const newLikeStatus = !isLiked;
+    setIsLiked(newLikeStatus);
+    setLikeCount(newLikeStatus ? likeCount + 1 : likeCount - 1);
+    // API call would go here: api.likePost(post.id, newLikeStatus);
+  };
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
@@ -48,18 +40,20 @@ const SinglePost = ({ post, onBack }) => {
 
     const newComment = {
       id: Date.now(),
-      avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Default user avatar
-      name: 'You', // Current user
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      name: 'You',
       date: 'Just now',
       text: commentText
     };
 
     setComments([newComment, ...comments]);
+    setCommentCount(commentCount + 1);
     setCommentText('');
-    setShowAllComments(true); // Automatically show all comments when new one is added
+    setShowAllComments(true);
+    // API call would go here: api.addComment(post.id, commentText);
   };
 
-  const visibleComments = showAllComments ? comments : comments.slice(0, 3);
+  const visibleComments = showAllComments ? comments : comments.slice(0, 2);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -75,7 +69,6 @@ const SinglePost = ({ post, onBack }) => {
       <article className="space-y-6">
         <div className="flex justify-between items-start">
           <h1 className="text-3xl font-bold">{post.title}</h1>
-         
         </div>
         
         <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -93,35 +86,34 @@ const SinglePost = ({ post, onBack }) => {
 
         <div className="prose max-w-none">
           <p className="text-gray-700 mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. 
-            Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus 
-            rhoncus ut eleifend nibh porttitor. Ut in nulla enim.
-          </p>
-          <p className="text-gray-700 mb-4">
-            Phasellus ligula massa, congue ac vulputate non, dignissim at augue. 
-            Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.
-          </p>
-          <p className="text-gray-700">
-            Integer cursus blandit fermentum. Curabitur lobortis, metus at ultricies 
-            vehicula, dui nisi tempor ligula, id porttitor diam purus vitae velit.
+            {post.content || 'Post content goes here...'}
           </p>
         </div>
 
         <div className="flex items-center gap-4 text-sm text-gray-500 pt-4 border-t">
-          <span className="flex items-center gap-1">
-            <FaRegHeart className="text-red-400" /> {post.likes}
-          </span>
-          <span className="flex items-center gap-1">
-            <FaRegComment className="text-blue-400" /> {post.comments}
-          </span>
+          <button 
+            onClick={handleLike}
+            className="flex items-center gap-1 hover:text-red-500 transition-colors"
+          >
+            {isLiked ? (
+              <FaHeart className="text-red-500" />
+            ) : (
+              <FaRegHeart className="text-red-400" />
+            )}
+            <span>{likeCount}</span>
+          </button>
+          <div className="flex items-center gap-1">
+            <FaRegComment className="text-blue-400" />
+            <span>{commentCount}</span>
+          </div>
         </div>
       </article>
 
       {/* Comments Section */}
       <section className="mt-12">
-        <h2 className="text-xl font-semibold mb-6">Comments ({comments.length})</h2>
+        <h2 className="text-xl font-semibold mb-6">Comments ({commentCount})</h2>
         
-        {/* Comment Form - Now at the top */}
+        {/* Comment Form */}
         <form onSubmit={handleSubmitComment} className="mb-8">
           <h3 className="text-lg font-medium mb-4">Add a comment</h3>
           <textarea 
@@ -161,13 +153,13 @@ const SinglePost = ({ post, onBack }) => {
             </div>
           ))}
 
-          {comments.length > 3 && (
+          {comments.length > 2 && (
             <button
               onClick={() => setShowAllComments(!showAllComments)}
               className="flex items-center gap-1 text-gray-600 hover:text-black mt-4 transition-colors"
             >
               <FaChevronDown className={`transition-transform duration-300 ${showAllComments ? 'rotate-180' : ''}`} />
-              {showAllComments ? 'Show less' : `Show all ${comments.length} comments`}
+              {showAllComments ? 'Show less' : `Show all ${commentCount} comments`}
             </button>
           )}
         </div>

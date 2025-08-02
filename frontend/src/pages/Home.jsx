@@ -40,7 +40,7 @@ const staticPosts = [
     isRecent: true
   },
   {
-    image: 'https://images.unsplash.com/photo-1581092580492-1c7a6ee4f1d5',
+    image: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7',
     title: 'Top 5 destinations to visit in 2025',
     summary: 'Plan your dream vacation with our top picks for travel in the coming year…',
     author: 'Mulu',
@@ -64,7 +64,7 @@ const staticPosts = [
     isRecent: false
   },
   {
-    image: 'https://images.unsplash.com/photo-1602524812048-5dfafc006d9f',
+    image: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7',
     title: 'Why React is still dominating in 2025',
     summary: `React remains the top choice for frontend developers — here's why it still holds the crown…`,
     author: 'Yosef',
