@@ -164,4 +164,4 @@ const changePassword = async(req, res)=>{
   }
 }
 
-export {signupUser, loginUser, getLoggedInUser, requestPasswordReset}
+export {signupUser, loginUser, getLoggedInUser, requestPasswordReset, changePassword}
