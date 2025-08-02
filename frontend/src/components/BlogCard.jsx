@@ -17,9 +17,7 @@ const BlogCard = ({ post, onSelectPost }) => {
           <h2 className="text-lg font-semibold leading-tight">
             {post.title}
           </h2>
-          <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
-            {post.category}
-          </span>
+         
         </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
