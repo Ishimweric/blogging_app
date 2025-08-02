@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
+import FloatingChatbot from "./components/FloatingBot";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Toaster/>
       <AuthProvider>
         <Navbar/>
+        <FloatingChatbot/>
         <Routes>
           <Route path="/signup" element={<SignupPage/>}/>
           <Route path="/login" element={<LoginPage/>}/>
