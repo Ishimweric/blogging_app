@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import toast from 'react-hot-toast';
+import axios from "axios"
 
 const SignupPage = () => {
   // declare state controllers
@@ -9,7 +11,36 @@ const SignupPage = () => {
   const [isLoading, setisLoading] = useState(false)
 
   // define handle submit function
-  const handleSubmit = ()=>{}
+  const handleSubmit = async(e)=>{
+    e.preventDefault(); //primarily to prevent reloading
+    setisLoading(true);
+
+    //form validation
+    if (!userName.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()){
+      toast.error("All fields are required")
+      setisLoading(false);
+      return;
+    }
+
+    if(password.trim() !== confirmPassword.trim()){
+      toast.error("Passwords do not match!");
+      setisLoading(false);
+      return;
+    }
+
+    if (password.trim().length < 8){
+      toast.error("Password must be atleast 8 characters long!")
+    }
+
+    // make api calls to backend
+    try {
+      const response = await axios.post("http://localhost:3500/api/auth/signup", {
+        
+      })
+    }catch (err) {
+      
+    }
+  }
   return (
     <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
