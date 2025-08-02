@@ -6,7 +6,7 @@ const BlogCard = ({ post }) => {
     <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
       <img
         src={post.image}
-        alt="blog cover"
+        alt=" Image of the sky taken from a roof top in a semi-urban city"
         className="w-full h-48 object-cover"
       />
       <div className="p-4 space-y-2">
