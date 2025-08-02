@@ -48,22 +48,22 @@ const SinglePost = ({ post, onBack }) => {
 
     const newComment = {
       id: Date.now(),
-      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      name: 'You',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Default user avatar
+      name: 'You', // Current user
       date: 'Just now',
       text: commentText
     };
 
     setComments([newComment, ...comments]);
     setCommentText('');
-    setShowAllComments(true);
+    setShowAllComments(true); // Automatically show all comments when new one is added
   };
 
   const visibleComments = showAllComments ? comments : comments.slice(0, 3);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Back Button */}
+      {/* Back button */}
       <button 
         onClick={onBack}
         className="flex items-center gap-2 mb-6 text-gray-600 hover:text-black transition-colors"
@@ -71,7 +71,7 @@ const SinglePost = ({ post, onBack }) => {
         <FaArrowLeft /> Back to Home
       </button>
 
-      {/* Post Content */}
+      {/* Blog Post Content */}
       <article className="space-y-6">
         <div className="flex justify-between items-start">
           <h1 className="text-3xl font-bold">{post.title}</h1>
@@ -121,22 +121,29 @@ const SinglePost = ({ post, onBack }) => {
 
       {/* Comments Section */}
       <section className="mt-12">
-        {/* Comments Header with Show More Button */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Comments ({comments.length})</h2>
-          {comments.length > 3 && (
-            <button
-              onClick={() => setShowAllComments(!showAllComments)}
-              className="flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm"
-            >
-              {showAllComments ? 'Show less' : 'Show more'}
-              <FaChevronDown className={`transition-transform duration-200 ${showAllComments ? 'rotate-180' : ''}`} />
-            </button>
-          )}
-        </div>
+        <h2 className="text-xl font-semibold mb-6">Comments ({comments.length})</h2>
+        
+        {/* Comment Form - Now at the top */}
+        <form onSubmit={handleSubmitComment} className="mb-8">
+          <h3 className="text-lg font-medium mb-4">Add a comment</h3>
+          <textarea 
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            rows="4"
+            placeholder="Write your comment here..."
+            required
+          />
+          <button 
+            type="submit"
+            className="mt-3 bg-gray-800 text-white px-4 py-2 rounded hover:bg-black transition-colors"
+          >
+            Post Comment
+          </button>
+        </form>
 
         {/* Comments List */}
-        <div className="space-y-6 mb-8">
+        <div className="space-y-6">
           {visibleComments.map(comment => (
             <div key={comment.id} className="flex gap-3">
               <img 
@@ -155,26 +162,17 @@ const SinglePost = ({ post, onBack }) => {
               </div>
             </div>
           ))}
-        </div>
 
-        {/* Add Comment Form - At Bottom */}
-        <form onSubmit={handleSubmitComment} className="border-t pt-6">
-          <h3 className="text-lg font-medium mb-4">Add a comment</h3>
-          <textarea 
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            rows="4"
-            placeholder="Write your comment here..."
-            required
-          />
-          <button 
-            type="submit"
-            className="mt-3 bg-gray-800 text-white px-4 py-2 rounded hover:bg-black transition-colors"
-          >
-            Post Comment
-          </button>
-        </form>
+          {comments.length > 3 && (
+            <button
+              onClick={() => setShowAllComments(!showAllComments)}
+              className="flex items-center gap-1 text-gray-600 hover:text-black mt-4 transition-colors"
+            >
+              <FaChevronDown className={`transition-transform duration-300 ${showAllComments ? 'rotate-180' : ''}`} />
+              {showAllComments ? 'Show less' : `Show all ${comments.length} comments`}
+            </button>
+          )}
+        </div>
       </section>
     </div>
   );
