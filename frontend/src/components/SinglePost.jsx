@@ -3,9 +3,8 @@ import { FaRegHeart, FaRegComment, FaArrowLeft, FaChevronDown } from 'react-icon
 
 const SinglePost = ({ post, onBack }) => {
   const [showAllComments, setShowAllComments] = useState(false);
-  
-  // Sample comments data
-  const comments = [
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState([
     {
       id: 1,
       avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
@@ -41,13 +40,30 @@ const SinglePost = ({ post, onBack }) => {
       date: '1 day ago',
       text: 'Could you elaborate more on this topic?'
     }
-  ];
+  ]);
+
+  const handleSubmitComment = (e) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+
+    const newComment = {
+      id: Date.now(),
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      name: 'You',
+      date: 'Just now',
+      text: commentText
+    };
+
+    setComments([newComment, ...comments]);
+    setCommentText('');
+    setShowAllComments(true);
+  };
 
   const visibleComments = showAllComments ? comments : comments.slice(0, 3);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Back button */}
+      {/* Back Button */}
       <button 
         onClick={onBack}
         className="flex items-center gap-2 mb-6 text-gray-600 hover:text-black transition-colors"
@@ -55,7 +71,7 @@ const SinglePost = ({ post, onBack }) => {
         <FaArrowLeft /> Back to Home
       </button>
 
-      {/* Blog Post Content */}
+      {/* Post Content */}
       <article className="space-y-6">
         <div className="flex justify-between items-start">
           <h1 className="text-3xl font-bold">{post.title}</h1>
@@ -105,9 +121,22 @@ const SinglePost = ({ post, onBack }) => {
 
       {/* Comments Section */}
       <section className="mt-12">
-        <h2 className="text-xl font-semibold mb-6">Comments ({comments.length})</h2>
-        
-        <div className="space-y-6">
+        {/* Comments Header with Show More Button */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">Comments ({comments.length})</h2>
+          {comments.length > 3 && (
+            <button
+              onClick={() => setShowAllComments(!showAllComments)}
+              className="flex items-center gap-1 text-gray-600 hover:text-black transition-colors text-sm"
+            >
+              {showAllComments ? 'Show less' : 'Show more'}
+              <FaChevronDown className={`transition-transform duration-200 ${showAllComments ? 'rotate-180' : ''}`} />
+            </button>
+          )}
+        </div>
+
+        {/* Comments List */}
+        <div className="space-y-6 mb-8">
           {visibleComments.map(comment => (
             <div key={comment.id} className="flex gap-3">
               <img 
@@ -126,26 +155,19 @@ const SinglePost = ({ post, onBack }) => {
               </div>
             </div>
           ))}
-
-          {comments.length > 3 && (
-            <button
-              onClick={() => setShowAllComments(!showAllComments)}
-              className="flex items-center gap-1 text-gray-600 hover:text-black mt-4 transition-colors"
-            >
-              <FaChevronDown className={`transition-transform duration-300 ${showAllComments ? 'rotate-180' : ''}`} />
-              {showAllComments ? 'Show less' : `Show all ${comments.length} comments`}
-            </button>
-          )}
         </div>
 
-        {/* Comment Form */}
-        <form className="mt-8">
+        {/* Add Comment Form - At Bottom */}
+        <form onSubmit={handleSubmitComment} className="border-t pt-6">
           <h3 className="text-lg font-medium mb-4">Add a comment</h3>
           <textarea 
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows="4"
             placeholder="Write your comment here..."
-          ></textarea>
+            required
+          />
           <button 
             type="submit"
             className="mt-3 bg-gray-800 text-white px-4 py-2 rounded hover:bg-black transition-colors"
