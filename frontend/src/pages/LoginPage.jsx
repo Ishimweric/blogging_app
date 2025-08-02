@@ -2,6 +2,7 @@ import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ const LoginPage = () => {
 
   // to navigate to dashboard
   const navigate = useNavigate();
+  const {login} = useAuth(); // get login fn
 
   // to handle form submission
   const handleSubmit = async(e)=>{
@@ -33,14 +35,16 @@ const LoginPage = () => {
       //handle responses
       if (response.status === 200){
         toast.success("Logged in successfully!");
-        // store the token and the user infos in the localstorage
-        localStorage.setItem("token", response.data.token); // store the token
-        localStorage.setItem("userInfo", JSON.stringify({
-          _id : response.data._id,
-          username : response.data.username,
-          email : response.data.email,
-          avatar : response.data.avatar
-        }));
+        //call the login function from authContext to update global state
+        login(
+          {
+            _id:response.data._id,
+            username: response.data.username,
+            email: response.data.email,
+            avatar: response.data.avatar,
+          },
+          response.data.token //pass the token to be stored in localstorage by context
+        );
         // navigate("/dashboard")
       }
     }catch (err) {
