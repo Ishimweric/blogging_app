@@ -2,6 +2,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast';
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; 
 
 const SignupPage = () => {
   // declare state controllers
@@ -12,6 +13,7 @@ const SignupPage = () => {
   const [isLoading, setisLoading] = useState(false)
 
   const navigate = useNavigate()
+  const { login } = useAuth();
 
   // define handle submit function
   const handleSubmit = async(e)=>{
@@ -51,6 +53,17 @@ const SignupPage = () => {
 
       // handle successful signup
       if (response.status === 201){
+        // call the login function from authContext to update global state
+        // after signup, we log the user in automatically
+        login(
+          {
+            _id: response.data._id,
+            username: response.data.username,
+            email: response.data.email,
+            avatar: response.data.avatar,
+          },
+          response.data.token // Pass the token to be stored in localStorage by context
+        );
         toast.success("Sign up successful!");
         // navigate("/login");
       }
@@ -63,9 +76,9 @@ const SignupPage = () => {
     }
   }
   return (
-    <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
-      <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">NoteDown</h2>
+    <section className="min-h-screen bg-gray-100 dark:bg-gray-800 flex flex-col justify-center items-center p-4">
+      <div className="p-8 bg-white dark:bg-gray-900 rounded-lg max-w-md w-full text-center">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">NoteDown</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             {/* for username */}
