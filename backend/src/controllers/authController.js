@@ -126,4 +126,42 @@ const requestPasswordReset = async(req, res)=>{
   }
 }
 
+// change password function
+const changePassword = async(req, res)=>{
+  const {currentPassword, newPassword} = req.body;
+  // req.user here is provided by the prior protect middleware
+  const userId = req.user._id; // get the id of the authenticated user
+
+  try {
+    const user = await User.findById(userId);
+    if (!user){
+      // this should ideally not be run though, cz the middleware already checked
+      res.status(404).json({"error" : "User not found"})
+    }
+
+    if (!currentPassword || !newPassword){
+      res.status(400).json({"message" : "Please provide both current and new passwords!"})
+    }
+
+    //check if the passwords matches
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch){
+      return res.status(401).json({"message" : "Incorrect current password!"})
+    }
+
+    if(newPassword.length < 8){
+      return res.status(400).json({"message" : "Password must be atleast 8 characters long!"})
+    }
+
+    // the pre save hook will automatically hash it
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({"message" : "Password changed successfully!"})
+  }catch (err) {
+    console.error("Change password error", err);
+    res.status(500).json({"message" : "Error during password change!"})
+  }
+}
+
 export {signupUser, loginUser, getLoggedInUser, requestPasswordReset}
