@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {Menu, Moon, Sun, User, X} from "lucide-react"
 import toast from "react-hot-toast";
 
@@ -16,6 +16,8 @@ const Navbar = () => {
 
     return false
   })
+
+  const navigate = useNavigate()
   
   //apply themes to body
   useEffect(()=>{
@@ -66,7 +68,8 @@ const Navbar = () => {
     localStorage.removeItem("userInfo")
     setIsLoggedIn(false);
     setUserName("");
-    toast.success("Successfully logged out!")
+    toast.success("Successfully logged out!");
+    navigate("/login")
   }
 
   const toggleTheme = ()=>{
