@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import FloatingChatbot from "./components/FloatingBot";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
+import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
   const [isSidebarOpen , setIsSidebarOpen] = useState(false);
@@ -33,6 +34,7 @@ const App = () => {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage/>} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/" element={<LoginPage />} />
             </Routes>
           </main>
