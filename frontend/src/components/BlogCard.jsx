@@ -5,7 +5,7 @@ const BlogCard = ({ post, onSelectPost }) => {
   return (
     <div 
       className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-      onClick={() => onSelectPost(post)}  // Make entire card clickable
+      onClick={() => onSelectPost(post)}
     >
       <img
         src={post.image}
@@ -13,9 +13,14 @@ const BlogCard = ({ post, onSelectPost }) => {
         className="w-full h-48 object-cover"
       />
       <div className="p-4 space-y-2">
-        <h2 className="text-lg font-semibold leading-tight">
-          {post.title}
-        </h2>
+        <div className="flex justify-between items-start">
+          <h2 className="text-lg font-semibold leading-tight">
+            {post.title}
+          </h2>
+          <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+            {post.category}
+          </span>
+        </div>
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <img src={post.avatar} alt="avatar" className="w-6 h-6 rounded-full" />
@@ -37,7 +42,7 @@ const BlogCard = ({ post, onSelectPost }) => {
 
         <button
           onClick={(e) => {
-            e.stopPropagation();  // Prevent card click from triggering
+            e.stopPropagation();
             onSelectPost(post);
           }}
           className="inline-block mt-2 text-white bg-gray-800 px-4 py-1 text-sm rounded hover:bg-black"
