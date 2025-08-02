@@ -1,6 +1,7 @@
 import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,49 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   // to handle form submission
-  const handleSubmit = async()=>{}
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    setisLoading(true);
+
+    // basic validation
+    if (!email.trim() || !password.trim()){
+      toast.error("Please enter both email and password!");
+      setisLoading(false);
+      return;
+    }
+
+    //make api call to /login rote on the server
+    try {
+      const response = await axios.post("http://localhost:3500/api/auth/login", {
+        email,
+        password
+      });
+      console.log(response.status)
+      //handle responses
+      if (response.status === 200){
+        toast.message("Logged in successfully!");
+        // store the token and the user infos in the localstorage
+        localStorage.setItem("token", response.data.token); // store the token
+        localStorage.setItem("userInfo", JSON.stringify({
+          _id : response.data._id,
+          username : response.data.username,
+          email : response.data.email,
+          avatar : response.data.avatar
+        }));
+        // navigate("/dashboard")
+      }
+    }catch (err) {
+      setisLoading(false);
+      if (err.response){
+        toast.error(err.response.data.message);
+      }else{
+        toast.error("An unexpected error occured, please try again!");
+      }
+      console.error("Login error", err.message)
+    }finally{
+      setisLoading(false)
+    }
+  }
   return (
     <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
