@@ -60,7 +60,7 @@ const LoginPage = () => {
     }
   }
   return (
-    <section className="min-h-screen bg-gray-100 dark:bg-gray-800 flex flex-col justify-center items-center p-4">
+    <section className="min-h-[calc(100vh-64px)] bg-gray-100 dark:bg-gray-800 flex flex-col justify-center items-center">
       <div className="p-8 bg-white dark:bg-gray-900 rounded-lg max-w-md w-full text-center text-gray-950 dark:text-gray-100">
         <h2 className="text-3xl font-bold mb-2 text-gray-800 dark:text-white">NoteDown</h2>
         <div className=" w-2/3 mx-auto">
