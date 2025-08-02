@@ -7,7 +7,29 @@ const ResetPasswordPage = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [isLoading, setisLoading] = useState(false);
 
-  const handleSubmit = async()=>{}
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    setisLoading(true);
+
+    // client-side validation
+    if (!newPassword.trim() || !currentPassword.trim()){
+      toast.error("Please enter both current and new passwords!")
+      setisLoading(false);
+      return;
+    }
+
+    if (newPassword.trim() !== currentPassword.trim()){
+      toast.error("Passwords do not match!");
+      setisLoading(false);
+      return;
+    }
+
+    if (newPassword.trim().length < 8){
+      toast.error("Password must have atleast 8 characters!");
+      setisLoading(false);
+      return;
+    }
+  }
   return (
     <section className="min-h-screen bg-gray-100 flex flex-col justify-center items-center p-4">
       <div className="p-8 bg-white rounded-lg max-w-md w-full text-center">
