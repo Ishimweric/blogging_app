@@ -3,6 +3,7 @@ import express from "express"
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoute.js"
 import rateLimiter from "./middlewares/rateLimiter.js";
+import cors from "cors"
 
 dotenv.config();
 
@@ -20,6 +21,9 @@ connectDB().then(()=>{
 });
 
 // middlewares
+app.use(cors({
+  origin : "http://localhost:5173"
+}))
 // builtin
 app.use(express.json());
 
