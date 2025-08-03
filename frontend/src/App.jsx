@@ -1,14 +1,11 @@
 import Dashboard from "./components/Dashboard"
-import Footer from "./components/Footer"
 
 const App = () => {
   return (
     <div>
-                <Dashboard />
-  
+      <Dashboard />
     </div>
   )
-    
 }
 
 export default App
