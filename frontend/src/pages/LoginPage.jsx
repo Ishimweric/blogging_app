@@ -39,7 +39,7 @@ const LoginPage = () => {
         login(
           response.data.token //pass the token to be stored in localstorage by context
         );
-        navigate("/dashboard");
+        navigate("/");
       }
     }catch (err) {
       setisLoading(false);

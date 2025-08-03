@@ -53,7 +53,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <Home size={20} /> <span>Home</span>
               </Link>
               <Link
-                to="/explore"
+                to="/"
                 onClick={toggleSidebar}
                 className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
               >
@@ -91,21 +91,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <LayoutDashboard size={20} /> <span>Dashboard</span>
               </Link>
               <Link
-                to="/all-posts"
+                to="/"
                 onClick={toggleSidebar}
                 className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
               >
                 <List size={20} /> <span>All Posts</span>
               </Link>
               <Link
-                to="/create-post"
+                to="/dashboard"
                 onClick={toggleSidebar}
                 className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
               >
                 <PlusCircle size={20} /> <span>Create Post</span>
               </Link>
               <Link
-                to="/my-posts"
+                to="/profile"
                 onClick={toggleSidebar}
                 className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
               >
