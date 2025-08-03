@@ -16,7 +16,7 @@ const Tabs = ({ tabs, onTabChange }) => {
           onClick={() => handleTabClick(index)}
           className={`px-4 py-2 font-medium ${
             activeTab === index
-              ? 'border-b-2 border-black text-black'
+              ? 'border-b-2 border-black text-black dark:text-white'
               : 'text-gray-500'
           }`}
         >
