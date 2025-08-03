@@ -92,7 +92,7 @@ const Navbar = ({ toggleSidebar }) => {
             </div>
           ):(
             <div className="relative group">
-              <Link to="/dashboard" className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+              <Link to="/profile" className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                 <User size={24} className="rounded-full bg-gray-200 dark:bg-gray-700 p-1" />
                 <span className="font-medium hidden md:inline">{user?.username}</span> {/* to show usernames on larger screens*/}
               </Link>

@@ -79,7 +79,7 @@ const SignupPage = () => {
             <input 
               type='text' 
               placeholder="username"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:ring-2"
+              className="w-full text-gray-950 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:ring-2"
               value={username}
               onChange={(e)=>setUserName(e.target.value)}
               required
@@ -91,7 +91,7 @@ const SignupPage = () => {
             <input
               type='email'
               placeholder="E-mail"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 text-gray-900 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
               required
@@ -103,7 +103,7 @@ const SignupPage = () => {
             <input
               type='password'
               placeholder="Create password"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 text-gray-900 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={password}
               onChange={(e)=>setPassword(e.target.value)}
               required
@@ -115,7 +115,7 @@ const SignupPage = () => {
             <input
               type='password'
               placeholder="Re-enter password"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 text-gray-900 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={confirmPassword}
               onChange={(e)=>setConfirmPassword(e.target.value)}
               required
