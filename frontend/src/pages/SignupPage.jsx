@@ -45,7 +45,7 @@ const SignupPage = () => {
 
     // make api calls to backend
     try {
-      const response = await axios.post("http://localhost:3500/api/auth/signup", {
+      const response = await axios.post(import.meta.env.VITE_BACKEND_API_URL + '/auth/signup', {
         username,
         email,
         password

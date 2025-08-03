@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Tabs = ({ tabs, onTabChange }) => {
   const [activeTab, setActiveTab] = useState(0);

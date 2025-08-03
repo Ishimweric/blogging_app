@@ -4,7 +4,7 @@ import Footer from './Footer';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3500/api',
+  baseURL: import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3500/api',
   timeout: 10000,
 });
 
@@ -84,7 +84,7 @@ const Dashboard = () => {
 
       let imageUrl = response.data.url;
       if (!imageUrl.startsWith('http')) {
-        imageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${imageUrl}`;
+        imageUrl = `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:5001'}${imageUrl}`;
       }
 
       setFormData(prev => ({ ...prev, image: imageUrl }));
@@ -156,7 +156,7 @@ const Dashboard = () => {
 
   const PostCard = ({ post }) => {
     const imageUrl = post.image?.startsWith('http') ? post.image : 
-                    `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
+                    `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:5001'}${post.image}`;
 
     return (
       <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
@@ -247,7 +247,7 @@ const Dashboard = () => {
 
   const PostDetail = ({ post, onBack }) => {
     const imageUrl = post.image?.startsWith('http') ? post.image : 
-                    `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
+                    `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:5001'}${post.image}`;
 
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 bg-white dark:bg-gray-900">

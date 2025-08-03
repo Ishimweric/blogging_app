@@ -33,7 +33,7 @@ const FloatingChatbot = () => {
 
     setIsTyping(true); //show typing indicator
 
-    const GEN_AI_SPECIALIST_API_URL = 'http://localhost:8000/api/chatbot/message';
+    const GEN_AI_SPECIALIST_API_URL = import.meta.env.VITE_BACKEND_API_URL + '/chatbot/send-message';
 
     try {
       const response = await axios.post(GEN_AI_SPECIALIST_API_URL,{

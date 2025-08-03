@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get('http://localhost:3500/api/auth/user', {
+      const response = await axios.get(import.meta.env.VITE_BACKEND_API_URL + '/auth/user', {
         headers: {
           Authorization: `Bearer ${token}`, // Manually add the token here
         },

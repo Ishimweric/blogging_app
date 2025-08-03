@@ -27,7 +27,7 @@ const LoginPage = () => {
 
     //make api call to /login rote on the server
     try {
-      const response = await axios.post("http://localhost:3500/api/auth/login", {
+      const response = await axios.post(import.meta.env.VITE_BACKEND_API_URL + '/auth/login', {
         email,
         password
       });
