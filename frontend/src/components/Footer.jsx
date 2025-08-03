@@ -1,13 +1,8 @@
-import React from 'react';
-
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
-    <footer className="bg-white py-4 px-6 border-t border-gray-200">
-      <div className="text-center text-sm text-gray-500">
-        ©2024 NoteDown. All rights reserved
-      </div>
-    </footer>
-  );
-};
+    <footer className="text-sm text-gray-700 text-center fixed w-full bottom-0 bg-gray-100 py-2">&copy;{currentYear} NoteDown. All Rights Reserved</footer>
+  )
+}
 
-export default Footer;
+export default Footer

@@ -1,20 +1,38 @@
-import express from "express";
-import dotenv from "dotenv";
+import dotenv from "dotenv"
+import express from "express"
 import { connectDB } from "./config/db.js";
+import authRoutes from "./routes/authRoute.js"
+import rateLimiter from "./middlewares/rateLimiter.js";
 import posts from "./routes/posts.js";
 import cors from "cors";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3500;
 
-// Connect to database
-connectDB();
+// START THE SERVER AFTER CONNECTING TO THE DATABASE
+connectDB().then(()=>{
+  app.listen(PORT, ()=>{
+    console.log(`SERVER LISTENING ON PORT ${PORT}`)
+  });
+}).catch(err=>{
+  console.error("Failed to connect to the DB", err);
+  process.exit(1); // exit if db fails
+});
 
-// Middleware
-app.use(cors());
+// middlewares
+app.use(cors({
+  origin: "http://localhost:5173"
+}))
+// builtin
 app.use(express.json());
+
+//custom
+// use rate limiter middleware to limit nbr of requests a use can make 
+app.use(rateLimiter)
+// use auth routes on this endpoint
+app.use("/api/auth", authRoutes);
 
 // Mount routers
 app.use("/api/posts", posts);
@@ -26,10 +44,6 @@ app.use((err, req, res, next) => {
     success: false,
     error: "Server error",
   });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server started on PORT: ${PORT}`);
 });
 
 // Handle unhandled promise rejections
