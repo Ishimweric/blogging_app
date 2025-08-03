@@ -69,7 +69,7 @@ const ResetPasswordPage = () => {
             <input
               type='password'
               placeholder="Current password"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 py-2 border text-gray-950 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={currentPassword}
               onChange={(e)=>setCurrentPassword(e.target.value)}
               required
@@ -81,7 +81,7 @@ const ResetPasswordPage = () => {
             <input
               type='password'
               placeholder="New password"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full px-4 text-gray-950 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={newPassword}
               onChange={(e)=>setNewPassword(e.target.value)}
               required
