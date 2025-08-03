@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaHeart, FaRegComment, FaArrowLeft, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import Footer from './Footer';
 import axios from 'axios';
@@ -6,7 +6,7 @@ import pop from '../assets/pop.png';
 import chatbot from '../assets/chatbot.png';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3500/api',
   timeout: 10000,
 });
 
