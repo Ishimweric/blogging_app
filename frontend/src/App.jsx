@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import Dashboard from "./components/Dashboard"
 
 const App = () => {
   const [isSidebarOpen , setIsSidebarOpen] = useState(false);
@@ -36,7 +37,7 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage/>} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </main>

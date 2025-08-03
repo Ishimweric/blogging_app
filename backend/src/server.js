@@ -3,7 +3,8 @@ import express from "express"
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoute.js"
 import rateLimiter from "./middlewares/rateLimiter.js";
-import cors from "cors"
+import posts from "./routes/posts.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -32,3 +33,22 @@ app.use(express.json());
 app.use(rateLimiter)
 // use auth routes on this endpoint
 app.use("/api/auth", authRoutes);
+
+// Mount routers
+app.use("/api/posts", posts);
+
+// Basic error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    error: "Server error",
+  });
+});
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err, promise) => {
+  console.error(`Error: ${err.message}`);
+  // Close server & exit process
+  server.close(() => process.exit(1));
+});
