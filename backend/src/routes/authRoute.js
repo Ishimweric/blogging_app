@@ -2,7 +2,6 @@ import express from "express"
 import { 
   loginUser, 
   signupUser, 
-  requestPasswordReset, 
   getLoggedInUser, 
   changePassword
 } from "../controllers/authController.js"
