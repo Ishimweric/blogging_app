@@ -1,8 +1,5 @@
 # NoteDown - Modern Blogging Platform
 
-![NoteDown Banner](https://via.placeholder.com/1200x400?text=NoteDown+Blogging+Platform)
-
-
 ## Project Overview
 
 NoteDown is a full-stack blogging application that enables users to:
@@ -89,11 +86,12 @@ NoteDown is a full-stack blogging application that enables users to:
 | Upstash Redis | Rate limiting |
 
 ## Development Team
-Name	Role	Responsibilities
-Finlay Ndung'u	UI/UX Designer	Designed user interfaces and experience flows
-Yohanna Moges	UI/UX Designer	Created visual designs and prototypes
-Elyas Yenealem	Fullstack Developer	Backend API and database architecture
-Ishimwe Eric	Fullstack Developer	Frontend implementation and state management
-Sena Kebede	AI Specialist	Integrated AI chatbot functionality
 
+| Name               | Role                 |                                                                
+|--------------------|----------------------|
+| Finlay Ndung'u     | UI/UX Designer       | 
+| Yohanna Moges      | UI/UX Designer       | 
+| Elyas Yenealem     | Fullstack Developer  | 
+| Ishimwe Eric       | Fullstack Developer  | 
+| Sena Kebede        | AI Specialist        | 
 ## Live Demo -  https://notedowny.netlify.app/
