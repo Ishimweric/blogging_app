@@ -11,6 +11,8 @@ import { useState } from "react";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import Dashboard from "./components/Dashboard"
+import Home from './pages/Home';
+import Footer from './components/Footer';
 
 const App = () => {
   const [isSidebarOpen , setIsSidebarOpen] = useState(false);
@@ -38,15 +40,16 @@ const App = () => {
               <Route path="/reset-password" element={<ResetPasswordPage/>} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<Home />} />
               <Route path="/settings" element={<SettingsPage />} />
             </Routes>
+            <Footer/>
           </main>
         </div>
         <FloatingChatbot />
       </AuthProvider>
     </Router>
   )
-}
+};
 
-export default App
+export default App;

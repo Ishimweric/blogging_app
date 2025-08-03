@@ -59,7 +59,7 @@ const SignupPage = () => {
           response.data.token // pass the token to be stored in localStorage by context
         );
         toast.success("Sign up successful!");
-        navigate("/dashboard");
+        navigate("/");
       }
     }catch (err) {
       setisLoading(false);
