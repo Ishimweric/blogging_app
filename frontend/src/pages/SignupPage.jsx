@@ -56,10 +56,10 @@ const SignupPage = () => {
         // call the login function from authContext to update global state
         // after signup, we log the user in automatically
         login(
-          response.data.token // Pass the token to be stored in localStorage by context
+          response.data.token // pass the token to be stored in localStorage by context
         );
         toast.success("Sign up successful!");
-        // navigate("/login");
+        navigate("/dashboard");
       }
     }catch (err) {
       setisLoading(false);
