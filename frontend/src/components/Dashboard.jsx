@@ -311,7 +311,7 @@ const Dashboard = () => {
               alt={post.title}
               className="w-full h-64 md:h-96 object-cover rounded-lg"
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/800x400?text=Blog+Post';
+                e.target.src = 'https://placehold.co/300x200?text=No+Image';
               }}
             />
           )}
