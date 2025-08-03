@@ -1,39 +1,27 @@
 import mongoose from 'mongoose';
 
-const postSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-    },
-    content: {
-      type: String,
-      required: true,
-    },
-    summary: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    likes: {
-      type: Number,
-      default: 0,
-    },
-    views: {
-      type: Number,
-      default: 0,
-    },
+const postSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  summary: { type: String, required: true },
+  content: { type: String, required: true },
+  image: { type: String, required: true },
+  category: { 
+    type: String, 
+    enum: ['Popular', 'Tech', 'Food'], 
+    default: 'Tech' 
   },
-  { timestamps: true }
-);
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
+}, { timestamps: true });
+
+postSchema.virtual('likeCount').get(function() {
+  return this.likes.length;
+});
+
+postSchema.virtual('commentCount').get(function() {
+  return this.comments.length;
+});
 
 const Post = mongoose.model('Post', postSchema);
 

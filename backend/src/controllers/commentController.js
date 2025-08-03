@@ -1,85 +1,49 @@
-import Comment from '../models/Comment.js';
-import Post from '../models/Post.js';
-import User from '../models/User.js';
+import Comment from "../models/Comment.js";
+import Post from "../models/Post.js";
 
-// @desc    Get comments for a post
-// @route   GET /api/comments/:postId
-// @access  Public
-export const getCommentsByPost = async (req, res) => {
-  try {
-    const comments = await Comment.find({ post: req.params.postId })
-      .populate('user', 'username avatar')
-      .sort({ createdAt: -1 });
-
-    // Format the date for display
-    const formattedComments = comments.map(comment => {
-      const timeDiff = Date.now() - new Date(comment.createdAt).getTime();
-      const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-      
-      let dateText;
-      if (daysDiff === 0) {
-        dateText = 'Today';
-      } else if (daysDiff === 1) {
-        dateText = '1 day ago';
-      } else if (daysDiff < 7) {
-        dateText = `${daysDiff} days ago`;
-      } else if (daysDiff < 30) {
-        const weeks = Math.floor(daysDiff / 7);
-        dateText = weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
-      } else {
-        const months = Math.floor(daysDiff / 30);
-        dateText = months === 1 ? '1 month ago' : `${months} months ago`;
-      }
-
-      return {
-        ...comment._doc,
-        date: dateText,
-        name: comment.user.username,
-        avatar: comment.user.avatar,
-      };
-    });
-
-    res.json(formattedComments);
-  } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
-
-// @desc    Add a comment to a post
-// @route   POST /api/comments/:postId
+// @desc    Add comment to post
+// @route   POST /api/comments
 // @access  Private
 export const addComment = async (req, res) => {
   try {
-    const { text } = req.body;
-    const post = await Post.findById(req.params.postId);
+    const { text, postId } = req.body;
 
+    const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
 
     const comment = new Comment({
       text,
-      post: req.params.postId,
-      user: req.user._id,
+      author: req.user._id,
+      post: postId
     });
 
-    const createdComment = await comment.save();
+    await comment.save();
 
-    // Populate user data for the response
-    const populatedComment = await Comment.findById(createdComment._id)
-      .populate('user', 'username avatar');
+    // Populate author details before sending response
+    const populatedComment = await Comment.findById(comment._id)
+      .populate('author', 'username avatar');
 
-    // Format the date for display
-    const timeDiff = Date.now() - new Date(populatedComment.createdAt).getTime();
-    const dateText = timeDiff < 86400000 ? 'Today' : '1 day ago';
+    res.status(201).json(populatedComment);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
 
-    res.status(201).json({
-      ...populatedComment._doc,
-      date: dateText,
-      name: populatedComment.user.username,
-      avatar: populatedComment.user.avatar,
-    });
-  } catch (error) {
+// @desc    Get comments for post
+// @route   GET /api/comments/post/:postId
+// @access  Public
+export const getCommentsByPost = async (req, res) => {
+  try {
+    const comments = await Comment.find({ post: req.params.postId })
+      .populate('author', 'username avatar')
+      .sort({ createdAt: -1 });
+
+    res.json(comments);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Server Error' });
   }
 };
