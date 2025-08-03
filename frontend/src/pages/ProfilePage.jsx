@@ -23,7 +23,7 @@ const ProfilePage = () => {
       setPostsError(null); // Clear previous errors
 
       try {
-        const response = await axios.get('http://localhost:3500/api/posts/my-posts');
+        const response = await axios.get('http://localhost:3500/api/posts/');
 
         setUserPosts(response.data.posts || []); 
         toast.success('Your posts loaded successfully!');
