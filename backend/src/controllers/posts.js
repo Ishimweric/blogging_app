@@ -1,84 +1,118 @@
 import Post from "../models/Post.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 
-// @desc    Get all posts
-// @route   GET /api/posts
-// @access  Private
-export const getPosts = async (req, res, next) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Get all posts
+const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort('-createdAt');
-    res.status(200).json({
-      success: true,
-      count: posts.length,
-      data: posts
-    });
-  } catch (err) {
-    next(err);
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json({ data: posts });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 };
 
-// @desc    Create new post
-// @route   POST /api/posts
-// @access  Private
-export const createPost = async (req, res, next) => {
+// Create new post
+const createPost = async (req, res) => {
   try {
-    const post = await Post.create(req.body);
-    res.status(201).json({
-      success: true,
-      data: post
+    const { title, summary, content, image } = req.body;
+    
+    const newPost = new Post({
+      title,
+      summary,
+      content,
+      image,
+      author: req.userId,
+      avatar: req.userAvatar || "https://randomuser.me/api/portraits/men/1.jpg"
     });
-  } catch (err) {
-    next(err);
+
+    await newPost.save();
+    res.status(201).json({ data: newPost });
+  } catch (error) {
+    res.status(409).json({ message: error.message });
   }
 };
 
-// @desc    Update post
-// @route   PUT /api/posts/:id
-// @access  Private
-export const updatePost = async (req, res, next) => {
+// Update post
+const updatePost = async (req, res) => {
   try {
-    let post = await Post.findById(req.params.id);
+    const { id } = req.params;
+    const { title, summary, content, image } = req.body;
 
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { title, summary, content, image },
+      { new: true }
+    );
+
+    res.status(200).json({ data: updatedPost });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+// Delete post
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const post = await Post.findByIdAndDelete(id);
+    
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        error: 'Post not found'
-      });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
-    post = await Post.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    // Delete associated image file if exists
+    if (post.image) {
+      const imagePath = path.join(__dirname, '../../public', post.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
 
-    res.status(200).json({
-      success: true,
-      data: post
-    });
-  } catch (err) {
-    next(err);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-// @desc    Delete post
-// @route   DELETE /api/posts/:id
-// @access  Private
-export const deletePost = async (req, res, next) => {
+// Upload image
+const uploadImage = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-
-    if (!post) {
-      return res.status(404).json({
-        success: false,
-        error: 'Post not found'
-      });
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    await post.remove();
-    res.status(200).json({
-      success: true,
-      data: {}
+    const uploadDir = path.join(__dirname, '../../public/uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const ext = path.extname(req.file.originalname);
+    const filename = `${Date.now()}${ext}`;
+    const filepath = path.join(uploadDir, filename);
+
+    fs.renameSync(req.file.path, filepath);
+
+    // Return full URL including host
+    const fullUrl = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
+    res.status(200).json({ 
+      url: fullUrl  // Now returns complete URL
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ message: 'Server error during upload' });
   }
+};
+// Export all methods
+export {
+  getPosts,
+  createPost,
+  updatePost,
+  deletePost,
+  uploadImage
 };

@@ -5,9 +5,9 @@ import axios from 'axios';
 import pop from '../assets/pop.png';
 import chatbot from '../assets/chatbot.png';
 
-// Configure axios
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+  timeout: 10000,
 });
 
 api.interceptors.request.use((config) => {
@@ -25,7 +25,6 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-
   const [editingPost, setEditingPost] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -34,19 +33,17 @@ const Dashboard = () => {
     image: ''
   });
 
-  // Fetch posts from backend
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await api.get('/posts');
         setPosts(response.data?.data || []);
       } catch (err) {
-        setError(err.response?.data?.error || 'Failed to fetch posts');
+        setError(err.response?.data?.message || 'Failed to fetch posts');
       } finally {
         setLoading(false);
       }
     };
-
     fetchPosts();
   }, []);
 
@@ -55,91 +52,126 @@ const Dashboard = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle image upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Preview the image
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024;
+    
+    if (!validTypes.includes(file.type)) {
+      setError('Only JPEG, PNG, GIF, or WebP images are allowed');
+      return;
+    }
+    
+    if (file.size > maxSize) {
+      setError('Image size must be less than 5MB');
+      return;
+    }
+
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
 
-    // Upload to server
-    const formData = new FormData();
-    formData.append('image', file);
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
 
     try {
       setUploading(true);
-      const response = await api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      setError(null);
+      
+      const response = await api.post('/posts/upload', uploadFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setFormData(prev => ({ ...prev, image: response.data.url }));
+
+      let imageUrl = response.data.url;
+      if (!imageUrl.startsWith('http')) {
+        imageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${imageUrl}`;
+      }
+
+      setFormData(prev => ({ ...prev, image: imageUrl }));
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to upload image');
+      console.error('Upload failed:', err);
+      setError(err.response?.data?.message || 'Image upload failed');
+      setImagePreview(null);
     } finally {
       setUploading(false);
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.title.trim()) {
+      setError('Title is required');
+      return;
+    }
+    
+    if (!formData.content.trim()) {
+      setError('Content is required');
+      return;
+    }
+
     try {
+      setLoading(true);
+      setError(null);
+
+      const postData = {
+        title: formData.title.trim(),
+        summary: formData.summary.trim(),
+        content: formData.content.trim(),
+        ...(formData.image && { image: formData.image })
+      };
+
+      let response;
       if (editingPost) {
-        // Update existing post
-        const response = await api.put(`/posts/${editingPost._id}`, {
-          ...formData,
-          author: "You",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg"
-        });
+        response = await api.put(`/posts/${editingPost._id}`, postData);
         setPosts(posts.map(post => 
           post._id === editingPost._id ? response.data.data : post
         ));
       } else {
-        // Create new post
-        const response = await api.post('/posts', {
-          ...formData,
-          author: "You",
-          avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-          likes: 0,
-          comments: 0
-        });
+        response = await api.post('/posts', postData);
         setPosts([response.data.data, ...posts]);
       }
+
       setFormData({ title: '', summary: '', content: '', image: '' });
       setImagePreview(null);
       setShowCreateForm(false);
       setEditingPost(null);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to save post');
+      console.error('Submission error:', err);
+      setError(err.response?.data?.message || 'Server error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Delete a post
   const handleDelete = async (postId) => {
     try {
       await api.delete(`/posts/${postId}`);
       setPosts(posts.filter(post => post._id !== postId));
       if (selectedPost?._id === postId) setSelectedPost(null);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to delete post');
+      setError(err.response?.data?.message || 'Failed to delete post');
     }
   };
 
-  // Post Card Component
   const PostCard = ({ post }) => {
+    const imageUrl = post.image?.startsWith('http') ? post.image : 
+                    `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
+
     return (
       <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
-        <img
-          src={post.image}
-          alt="Blog post"
-          className="w-full h-48 object-cover"
-        />
+        {post.image && (
+          <img
+            src={imageUrl}
+            alt={post.title}
+            className="w-full h-48 object-cover"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/300x200?text=Blog+Post';
+            }}
+          />
+        )}
         <div className="p-4 space-y-2">
           <div className="flex justify-between items-start">
             <h2 className="text-lg font-semibold leading-tight">
@@ -215,8 +247,10 @@ const Dashboard = () => {
     );
   };
 
-  // Post Detail Component
   const PostDetail = ({ post, onBack }) => {
+    const imageUrl = post.image?.startsWith('http') ? post.image : 
+                    `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
+
     return (
       <div className="max-w-3xl mx-auto px-4 py-8">
         <button 
@@ -271,11 +305,16 @@ const Dashboard = () => {
             })}</span>
           </div>
 
-          <img 
-            src={post.image} 
-            alt="Blog post" 
-            className="w-full h-64 md:h-96 object-cover rounded-lg"
-          />
+          {post.image && (
+            <img 
+              src={imageUrl}
+              alt={post.title}
+              className="w-full h-64 md:h-96 object-cover rounded-lg"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/800x400?text=Blog+Post';
+              }}
+            />
+          )}
 
           <div className="prose max-w-none">
             <p className="text-gray-700 mb-4">
@@ -295,10 +334,8 @@ const Dashboard = () => {
           </div>
         </article>
 
-        {/* Comments Section */}
         <section className="mt-12">
           <h2 className="text-xl font-semibold mb-6">Comments ({post.comments || 0})</h2>
-          
           <div className="space-y-6">
             <div className="flex gap-3">
               <img 
@@ -324,14 +361,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
       <header className="py-4 px-6 flex justify-between items-center top-0 z-10">
         <button className="hover:text-black rounded-full">
-          <img 
-              src={pop} 
-              alt="pop" 
-              className="w-10 h-10 mt-[10px] ml-[10px]" 
-          />
+          <img src={pop} alt="pop" className="w-10 h-10 mt-[10px] ml-[10px]" />
         </button>
         <a 
           href="#main-content" 
@@ -341,13 +373,11 @@ const Dashboard = () => {
         </a>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1">
         {selectedPost ? (
           <PostDetail post={selectedPost} onBack={() => setSelectedPost(null)} />
         ) : (
           <>
-            {/* Dashboard Header */}
             <div className="bg-gray-50 p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
@@ -366,7 +396,6 @@ const Dashboard = () => {
                   </button>
                 </div>
                 
-                {/* Tabs */}
                 <div className="border-b border-gray-200">
                   <nav className="flex space-x-8">
                     <button
@@ -384,29 +413,27 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Main Content Area */}
             <div id="main-content" className="p-6 max-w-4xl mx-auto w-full">
-              {/* Error Message */}
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                  {error}
-                  <button 
-                    onClick={() => setError(null)} 
-                    className="float-right font-bold"
-                  >
-                    &times;
-                  </button>
+                  <div className="flex justify-between">
+                    <span>{error}</span>
+                    <button 
+                      onClick={() => setError(null)} 
+                      className="font-bold"
+                    >
+                      &times;
+                    </button>
+                  </div>
                 </div>
               )}
 
-              {/* Loading State */}
               {loading && !showCreateForm && (
                 <div className="flex justify-center items-center py-8">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-800"></div>
                 </div>
               )}
 
-              {/* Create/Edit Form */}
               {showCreateForm && (
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-gray-200">
                   <h2 className="text-lg font-medium mb-4 text-gray-800">
@@ -415,7 +442,7 @@ const Dashboard = () => {
                   <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                       <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-                        Title
+                        Title *
                       </label>
                       <input
                         type="text"
@@ -438,12 +465,11 @@ const Dashboard = () => {
                         value={formData.summary}
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-800 focus:border-transparent"
-                        required
                       />
                     </div>
                     <div className="mb-4">
                       <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-                        Content
+                        Content *
                       </label>
                       <textarea
                         id="content"
@@ -461,7 +487,7 @@ const Dashboard = () => {
                       </label>
                       <div className="flex items-center gap-4">
                         <div className="relative">
-                          <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md text-sm font-medium text-gray-700 transition-colors">
+                          <label className={`cursor-pointer ${uploading ? 'bg-gray-300' : 'bg-gray-100 hover:bg-gray-200'} px-4 py-2 rounded-md text-sm font-medium text-gray-700 transition-colors`}>
                             {uploading ? 'Uploading...' : 'Choose Image'}
                             <input
                               type="file"
@@ -502,6 +528,7 @@ const Dashboard = () => {
                         onClick={() => {
                           setShowCreateForm(false);
                           setImagePreview(null);
+                          setError(null);
                         }}
                         className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
@@ -509,17 +536,16 @@ const Dashboard = () => {
                       </button>
                       <button
                         type="submit"
-                        className="text-white bg-gray-800 px-4 py-2 rounded hover:bg-black transition-colors"
-                        disabled={!formData.image || uploading}
+                        className={`text-white ${loading ? 'bg-gray-500' : 'bg-gray-800 hover:bg-black'} px-4 py-2 rounded transition-colors`}
+                        disabled={loading}
                       >
-                        {editingPost ? 'Update Post' : 'Publish Post'}
+                        {loading ? 'Processing...' : editingPost ? 'Update Post' : 'Publish Post'}
                       </button>
                     </div>
                   </form>
                 </div>
               )}
 
-              {/* Posts Grid */}
               {!loading && !showCreateForm && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {posts.length > 0 ? (
@@ -538,12 +564,10 @@ const Dashboard = () => {
         )}
       </main>
 
-      {/* Chatbot Icon */}
       <button className="fixed bottom-6 right-6 text-white p-3 rounded-full">
         <img src={chatbot} alt="" className='w-14 h-14'/>
       </button>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

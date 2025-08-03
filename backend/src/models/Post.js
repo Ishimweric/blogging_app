@@ -16,14 +16,19 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add content']
   },
-  image: {
-    type: String,
-    required: [true, 'Please add an image URL'],
-    match: [
-      /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif))$/i,
-      'Please use a valid image URL'
-    ]
-  },
+  // In your Post model, ensure image URL is stored correctly
+image: {
+  type: String,
+  required: false,
+  validate: {
+    validator: function(v) {
+      return v === null || 
+             v.startsWith('http') || 
+             v.startsWith('/uploads/');
+    },
+    message: 'Invalid image URL format'
+  }
+},
   author: {
     type: String,
     default: "You"
