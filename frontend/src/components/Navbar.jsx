@@ -47,12 +47,10 @@ const Navbar = ({ toggleSidebar }) => {
   return (
     <nav className="bg-white dark:text-white text-black dark:bg-gray-900 sticky top-0 shadow-md p-4 z-50 transition-colors duration-300 ease-in-out">
       <div className="container flex justify-between mx-auto items-center">
-        {/* Sidebar Toggle Button is visible on mobile, hidden on larger screens where sidebar is always cisible */}
         <div className="flex items-center space-x-4">
           <button
-            onClick={toggleSidebar} // This button toggles the main sidebar
+            onClick={toggleSidebar}
             className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Toggle Sidebar"
           >
             <Menu size={24} />
           </button>
@@ -67,9 +65,18 @@ const Navbar = ({ toggleSidebar }) => {
           <button onClick={toggleTheme} className="p-2 hover:bg-gray-200 rounded-full dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-200">
             {isDarkmode? <Sun size={20}/> : <Moon size={20}/>}
           </button>
-          <button onClick={toggleMobileMenu} className="text-gray-700 dark:text-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 hover:bg-gray-200 dark:hover:bg-gray-700  focus:ring-blue-500">
-            {isMobileMenuOpen? <X size={20}/> : <Menu size={20}/>}
-          </button>
+          {!isLoggedIn?(
+            <div>
+              <Link to={"/login"} className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 font-medium px-3 py-2 rounded-md">Login</Link>
+            </div>
+          ):(
+            <div className="relative group">
+              <Link to="/profile" className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                <User size={24} className="rounded-full bg-gray-200 dark:bg-gray-700 p-1" />
+                <span className="font-medium hidden md:inline">{user?.username}</span> {/* to show usernames on larger screens*/}
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* for desktop navigation */}
