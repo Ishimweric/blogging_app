@@ -77,7 +77,7 @@ blogging_app/
 | Multer | File uploads |
 | Upstash Redis | Rate limiting |
 
-Development Team
+## Development Team
 Name	Role	Responsibilities
 Finlay Ndung'u	UI/UX Designer	Designed user interfaces and experience flows
 Yohanna Moges	UI/UX Designer	Created visual designs and prototypes
