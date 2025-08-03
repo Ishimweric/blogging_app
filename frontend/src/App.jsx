@@ -6,7 +6,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import Navbar from "./components/Navbar.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import FloatingChatbot from "./components/FloatingBot.jsx";
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
