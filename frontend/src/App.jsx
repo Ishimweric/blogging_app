@@ -1,18 +1,18 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import SignupPage from "./pages/SignupPage"
+import SignupPage from "./pages/SignupPage.jsx"
 import { Toaster } from 'react-hot-toast';
-import LoginPage from "./pages/LoginPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import Navbar from "./components/Navbar";
-import { AuthProvider } from "./context/AuthContext";
-import FloatingChatbot from "./components/FloatingBot";
-import Sidebar from "./components/Sidebar";
+import LoginPage from "./pages/LoginPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
+import Navbar from "./components/Navbar.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import FloatingChatbot from "./components/FloatingBot.jsx";
+import Sidebar from "./components/Sidebar.jsx";
 import { useState } from "react";
-import ProfilePage from "./pages/ProfilePage";
-import SettingsPage from "./pages/SettingsPage";
-import Dashboard from "./components/Dashboard"
-import Home from './pages/Home';
-import Footer from './components/Footer';
+import ProfilePage from "./pages/ProfilePage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
+import Dashboard from "./components/Dashboard.jsx"
+import Home from './pages/Home.jsx';
+import Footer from './components/Footer.jsx';
 
 const App = () => {
   const [isSidebarOpen , setIsSidebarOpen] = useState(false);
