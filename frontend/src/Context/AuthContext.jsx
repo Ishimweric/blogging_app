@@ -1,66 +1,90 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
-// create the auth Context
 const AuthContext = createContext(null);
 
-// create the Auth Provider Component
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true); //indicate initial auth check is in progres
+  const [user, setUser] = useState(null); // Stores user info: { _id, username, email, avatar }
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true); // To indicate initial auth check is in progress
 
-  // function to handle login, it'll be called by both login and signup pages
-  const login = (userData, token) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('userInfo', JSON.stringify(userData));
-    setIsLoggedIn(true);
-    setUser(userData);
-    toast.success('Login successful!');
+  // Function to fetch user details from the backend
+  const fetchUserDetails = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setIsLoggedIn(false);
+      setUser(null);
+      setIsLoadingAuth(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get('http://localhost:3500/api/auth/user', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Manually add the token here
+        },
+      });
+
+
+      if (response.status === 200 && response.data) {
+        // Backend returns user details directly
+        const userData = response.data;
+        setIsLoggedIn(true);
+        setUser(userData);
+        console.log("AuthContext: User details fetched from backend:", userData); // Debug log
+      } else {
+        // If token is invalid or user not found on backend, clear local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userInfo'); // Clear old userInfo as well
+        setIsLoggedIn(false);
+        setUser(null);
+        toast.error('Session expired or invalid. Please log in again.');
+      }
+    } catch (error) {
+      console.error('AuthContext: Error fetching user details from backend:', error);
+      // Clear local storage if API call fails (e.g., 401 Unauthorized, network error)
+      localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
+      setIsLoggedIn(false);
+      setUser(null);
+      // Only show toast if it's not just an initial load without a token
+      if (token) {
+        toast.error('Failed to verify session. Please log in.');
+      }
+    } finally {
+      setIsLoadingAuth(false);
+    }
   };
 
-  // function to tackle logout
+  // On initial mount, fetch user details from backend
+  useEffect(() => {
+    fetchUserDetails();
+  }, []); // Runs only once on mount
+
+  // The login function now just triggers a re-fetch of user details
+  const login = (token) => { // Only pass token, details will be fetched
+    localStorage.setItem('token', token);
+    // Remove old userInfo from localStorage as we'll rely on backend fetch
+    localStorage.removeItem('userInfo');
+    // Trigger re-fetch of user details
+    fetchUserDetails();
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
-    setIsLoggedIn(false)
+    setIsLoggedIn(false);
     setUser(null);
     toast.success('Logged out successfully!');
   };
 
-  // Effect to check auth status on initial load
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userInfo = localStorage.getItem('userInfo');
-
-    if (token && userInfo) {
-      try {
-        const parsedUser =JSON.parse(userInfo);
-        setIsLoggedIn(true);
-        setUser(parsedUser);
-
-      } catch (err) {
-        console.error("Failed to parse user info from localStorage on init:", err);
-        //clear invalid data if the parsing fails
-        localStorage.removeItem('token')
-        localStorage.removeItem('userInfo');
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    } else {
-      setIsLoggedIn(false);
-      setUser(null);
-    }
-    setIsLoadingAuth(false); // auth check complete
-  }, [])
-
-  //provide the auth state and functions to children components
   const authContextValue = {
     isLoggedIn,
     user,
     isLoadingAuth,
     login,
-    logout
+    logout,
   };
 
   return (
@@ -70,10 +94,9 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-//custom Hook to easily consume the Auth Context
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context=== undefined) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

@@ -56,12 +56,6 @@ const SignupPage = () => {
         // call the login function from authContext to update global state
         // after signup, we log the user in automatically
         login(
-          {
-            _id: response.data._id,
-            username: response.data.username,
-            email: response.data.email,
-            avatar: response.data.avatar,
-          },
           response.data.token // Pass the token to be stored in localStorage by context
         );
         toast.success("Sign up successful!");

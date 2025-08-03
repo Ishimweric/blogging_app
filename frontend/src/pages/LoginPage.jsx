@@ -37,12 +37,6 @@ const LoginPage = () => {
         toast.success("Logged in successfully!");
         //call the login function from authContext to update global state
         login(
-          {
-            _id:response.data._id,
-            username: response.data.username,
-            email: response.data.email,
-            avatar: response.data.avatar,
-          },
           response.data.token //pass the token to be stored in localstorage by context
         );
         // navigate("/dashboard")
@@ -72,7 +66,7 @@ const LoginPage = () => {
             <input
               type='email'
               placeholder="E-mail"
-              className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
+              className="w-full text-gray-950 px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md"
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
               required
