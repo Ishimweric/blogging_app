@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { FaHeart, FaRegComment, FaArrowLeft, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import Footer from './Footer';
 import axios from 'axios';
-import pop from '../assets/pop.png';
-import chatbot from '../assets/chatbot.png';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3500/api',
@@ -161,7 +159,7 @@ const Dashboard = () => {
                     `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
 
     return (
-      <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
+      <div className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
         {post.image && (
           <img
             src={imageUrl}
@@ -174,7 +172,7 @@ const Dashboard = () => {
         )}
         <div className="p-4 space-y-2">
           <div className="flex justify-between items-start">
-            <h2 className="text-lg font-semibold leading-tight">
+            <h2 className="text-lg font-semibold leading-tight dark:text-white">
               {post.title}
             </h2>
             <div className="flex space-x-2">
@@ -191,7 +189,7 @@ const Dashboard = () => {
                   setImagePreview(post.image);
                   setShowCreateForm(true);
                 }}
-                className="text-gray-500 hover:text-gray-800"
+                className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
               >
                 <FaEdit />
               </button>
@@ -200,14 +198,14 @@ const Dashboard = () => {
                   e.stopPropagation();
                   handleDelete(post._id);
                 }}
-                className="text-gray-500 hover:text-red-600"
+                className="text-gray-500 hover:text-red-600 dark:hover:text-red-400"
               >
                 <FaTrash />
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
             <img src={post.avatar || 'https://randomuser.me/api/portraits/men/1.jpg'} 
                  alt="avatar" className="w-6 h-6 rounded-full" />
             <span>{post.author || 'You'}</span>
@@ -219,9 +217,9 @@ const Dashboard = () => {
             })}</span>
           </div>
 
-          <p className="text-sm text-gray-700">{post.summary}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300">{post.summary}</p>
 
-          <div className="flex items-center gap-4 text-sm text-gray-500 pt-2">
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 pt-2">
             <div className="flex items-center gap-1">
               <FaHeart className="text-red-500" />
               <span>{post.likes || 0}</span>
@@ -238,7 +236,7 @@ const Dashboard = () => {
               e.stopPropagation();
               setSelectedPost(post);
             }}
-            className="inline-block mt-2 text-white bg-gray-800 px-4 py-1 text-sm rounded hover:bg-black"
+            className="inline-block mt-2 text-white bg-gray-800 dark:bg-gray-700 px-4 py-1 text-sm rounded hover:bg-black dark:hover:bg-gray-600 transition-colors"
           >
             View Details
           </button>
@@ -252,17 +250,17 @@ const Dashboard = () => {
                     `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}${post.image}`;
 
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-8 bg-white dark:bg-gray-900">
         <button 
           onClick={onBack}
-          className="flex items-center gap-2 mb-6 text-gray-600 hover:text-black transition-colors"
+          className="flex items-center gap-2 mb-6 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
         >
           <FaArrowLeft /> Back to Dashboard
         </button>
 
         <article className="space-y-6">
           <div className="flex justify-between items-start">
-            <h1 className="text-3xl font-bold">{post.title}</h1>
+            <h1 className="text-3xl font-bold dark:text-white">{post.title}</h1>
             <div className="flex space-x-2">
               <button
                 onClick={() => {
@@ -277,7 +275,7 @@ const Dashboard = () => {
                   setShowCreateForm(true);
                   setSelectedPost(null);
                 }}
-                className="text-gray-500 hover:text-gray-800"
+                className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
               >
                 <FaEdit />
               </button>
@@ -286,14 +284,14 @@ const Dashboard = () => {
                   handleDelete(post._id);
                   setSelectedPost(null);
                 }}
-                className="text-gray-500 hover:text-red-600"
+                className="text-gray-500 hover:text-red-600 dark:hover:text-red-400"
               >
                 <FaTrash />
               </button>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
             <img src={post.avatar || 'https://randomuser.me/api/portraits/men/1.jpg'} 
                  alt="avatar" className="w-8 h-8 rounded-full" />
             <span>{post.author || 'You'}</span>
@@ -316,13 +314,13 @@ const Dashboard = () => {
             />
           )}
 
-          <div className="prose max-w-none">
-            <p className="text-gray-700 mb-4">
+          <div className="prose max-w-none dark:text-gray-300">
+            <p className="text-gray-700 dark:text-gray-300 mb-4">
               {post.content}
             </p>
           </div>
 
-          <div className="flex items-center gap-4 text-sm text-gray-500 pt-4 border-t">
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-1">
               <FaHeart className="text-red-500" />
               <span>{post.likes || 0}</span>
@@ -335,7 +333,7 @@ const Dashboard = () => {
         </article>
 
         <section className="mt-12">
-          <h2 className="text-xl font-semibold mb-6">Comments ({post.comments || 0})</h2>
+          <h2 className="text-xl font-semibold mb-6 dark:text-white">Comments ({post.comments || 0})</h2>
           <div className="space-y-6">
             <div className="flex gap-3">
               <img 
@@ -344,12 +342,12 @@ const Dashboard = () => {
                 className="w-10 h-10 rounded-full"
               />
               <div className="flex-1">
-                <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">Sarah Johnson</span>
-                    <span className="text-xs text-gray-500">2 days ago</span>
+                    <span className="font-medium dark:text-white">Sarah Johnson</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">2 days ago</span>
                   </div>
-                  <p className="text-gray-700">Great post! I really enjoyed reading this.</p>
+                  <p className="text-gray-700 dark:text-gray-300">Great post! I really enjoyed reading this.</p>
                 </div>
               </div>
             </div>
@@ -360,14 +358,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="py-4 px-6 flex justify-between items-center top-0 z-10">
-        <button className="hover:text-black rounded-full">
-          <img src={pop} alt="pop" className="w-10 h-10 mt-[10px] ml-[10px]" />
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+      <header className="py-4 px-6 flex justify-between items-center top-0 z-10 bg-white dark:bg-gray-900">
+        <button className="hover:text-black dark:hover:text-white rounded-full">
+          <span className="text-xl font-bold dark:text-white">Dashboard</span>
         </button>
         <a 
           href="#main-content" 
-          className="text-gray-800 hover:text-black px-3 py-1 rounded transition-colors text-sm"
+          className="text-gray-800 dark:text-gray-300 hover:text-black dark:hover:text-white px-3 py-1 rounded transition-colors text-sm"
         >
           Skip to main
         </a>
@@ -378,10 +376,10 @@ const Dashboard = () => {
           <PostDetail post={selectedPost} onBack={() => setSelectedPost(null)} />
         ) : (
           <>
-            <div className="bg-gray-50 p-6">
+            <div className="bg-gray-50 dark:bg-gray-900 p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="flex justify-between items-center mb-4">
-                  <h1 className="text-xl font-semibold text-gray-800">My Dashboard</h1>
+                  <h1 className="text-xl font-semibold text-gray-800 dark:text-white">My Dashboard</h1>
                   <button
                     onClick={() => {
                       setShowCreateForm(true);
@@ -389,21 +387,21 @@ const Dashboard = () => {
                       setFormData({ title: '', summary: '', content: '', image: '' });
                       setImagePreview(null);
                     }}
-                    className="flex items-center gap-2 text-white bg-gray-800 px-4 py-2 rounded hover:bg-black transition-colors"
+                    className="flex items-center gap-2 text-white bg-gray-800 dark:bg-gray-700 px-4 py-2 rounded hover:bg-black dark:hover:bg-gray-600 transition-colors"
                   >
                     <FaPlus className="text-sm" />
                     <span>Create Post</span>
                   </button>
                 </div>
                 
-                <div className="border-b border-gray-200">
+                <div className="border-b border-gray-200 dark:border-gray-700">
                   <nav className="flex space-x-8">
                     <button
                       onClick={() => setActiveTab('myPosts')}
                       className={`pb-3 px-1 font-medium text-sm ${
                         activeTab === 'myPosts' 
-                          ? 'text-gray-800 border-b-2 border-gray-800' 
-                          : 'text-gray-500 hover:text-gray-700'
+                          ? 'text-gray-800 dark:text-white border-b-2 border-gray-800 dark:border-white' 
+                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                       }`}
                     >
                       My Posts
@@ -415,7 +413,7 @@ const Dashboard = () => {
 
             <div id="main-content" className="p-6 max-w-4xl mx-auto w-full">
               {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-100 px-4 py-3 rounded mb-4">
                   <div className="flex justify-between">
                     <span>{error}</span>
                     <button 
@@ -430,18 +428,18 @@ const Dashboard = () => {
 
               {loading && !showCreateForm && (
                 <div className="flex justify-center items-center py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-800"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-800 dark:border-gray-200"></div>
                 </div>
               )}
 
               {showCreateForm && (
-                <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-gray-200">
-                  <h2 className="text-lg font-medium mb-4 text-gray-800">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700">
+                  <h2 className="text-lg font-medium mb-4 text-gray-800 dark:text-white">
                     {editingPost ? 'Edit Post' : 'Create New Post'}
                   </h2>
                   <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                      <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Title *
                       </label>
                       <input
@@ -450,12 +448,12 @@ const Dashboard = () => {
                         name="title"
                         value={formData.title}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-800 dark:focus:ring-gray-200 focus:border-transparent bg-white dark:bg-gray-700 text-black dark:text-white"
                         required
                       />
                     </div>
                     <div className="mb-4">
-                      <label htmlFor="summary" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="summary" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Summary
                       </label>
                       <input
@@ -464,11 +462,11 @@ const Dashboard = () => {
                         name="summary"
                         value={formData.summary}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-800 dark:focus:ring-gray-200 focus:border-transparent bg-white dark:bg-gray-700 text-black dark:text-white"
                       />
                     </div>
                     <div className="mb-4">
-                      <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Content *
                       </label>
                       <textarea
@@ -477,17 +475,17 @@ const Dashboard = () => {
                         rows="6"
                         value={formData.content}
                         onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-800 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-gray-800 dark:focus:ring-gray-200 focus:border-transparent bg-white dark:bg-gray-700 text-black dark:text-white"
                         required
                       ></textarea>
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Featured Image
                       </label>
                       <div className="flex items-center gap-4">
                         <div className="relative">
-                          <label className={`cursor-pointer ${uploading ? 'bg-gray-300' : 'bg-gray-100 hover:bg-gray-200'} px-4 py-2 rounded-md text-sm font-medium text-gray-700 transition-colors`}>
+                          <label className={`cursor-pointer ${uploading ? 'bg-gray-300 dark:bg-gray-600' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'} px-4 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors`}>
                             {uploading ? 'Uploading...' : 'Choose Image'}
                             <input
                               type="file"
@@ -499,7 +497,7 @@ const Dashboard = () => {
                           </label>
                         </div>
                         {uploading && (
-                          <div className="text-sm text-gray-500">Uploading image...</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">Uploading image...</div>
                         )}
                       </div>
                       {imagePreview && (
@@ -507,7 +505,7 @@ const Dashboard = () => {
                           <img 
                             src={imagePreview} 
                             alt="Preview" 
-                            className="h-40 object-cover rounded-md border border-gray-200"
+                            className="h-40 object-cover rounded-md border border-gray-200 dark:border-gray-600"
                           />
                           <button
                             type="button"
@@ -515,7 +513,7 @@ const Dashboard = () => {
                               setImagePreview(null);
                               setFormData(prev => ({ ...prev, image: '' }));
                             }}
-                            className="mt-2 text-sm text-red-600 hover:text-red-800"
+                            className="mt-2 text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                           >
                             Remove Image
                           </button>
@@ -530,13 +528,13 @@ const Dashboard = () => {
                           setImagePreview(null);
                           setError(null);
                         }}
-                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className={`text-white ${loading ? 'bg-gray-500' : 'bg-gray-800 hover:bg-black'} px-4 py-2 rounded transition-colors`}
+                        className={`text-white ${loading ? 'bg-gray-500' : 'bg-gray-800 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600'} px-4 py-2 rounded transition-colors`}
                         disabled={loading}
                       >
                         {loading ? 'Processing...' : editingPost ? 'Update Post' : 'Publish Post'}
@@ -553,7 +551,7 @@ const Dashboard = () => {
                       <PostCard key={post._id} post={post} />
                     ))
                   ) : (
-                    <div className="col-span-2 text-center py-8 text-gray-500">
+                    <div className="col-span-2 text-center py-8 text-gray-500 dark:text-gray-400">
                       No posts found. Create your first post!
                     </div>
                   )}
@@ -563,10 +561,6 @@ const Dashboard = () => {
           </>
         )}
       </main>
-
-      <button className="fixed bottom-6 right-6 text-white p-3 rounded-full">
-        <img src={chatbot} alt="" className='w-14 h-14'/>
-      </button>
 
       <Footer />
     </div>
