@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../Context/AuthContext';
 import { ChevronRight, Sun, Moon, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

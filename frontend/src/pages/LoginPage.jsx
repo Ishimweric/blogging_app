@@ -2,7 +2,7 @@ import toast from "react-hot-toast"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

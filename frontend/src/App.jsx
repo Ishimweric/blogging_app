@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import LoginPage from "./pages/LoginPage.jsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import Navbar from "./components/Navbar.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthProvider } from "./Context/AuthContext.jsx";
 import FloatingChatbot from "./components/FloatingBot.jsx";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
