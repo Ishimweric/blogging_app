@@ -23,7 +23,7 @@ connectDB().then(()=>{
 
 // middlewares
 app.use(cors({
-  origin: "https://notedowny.netlify.app/"
+  origin: "https://notedowny.netlify.app"
 }))
 // builtin
 app.use(express.json());
