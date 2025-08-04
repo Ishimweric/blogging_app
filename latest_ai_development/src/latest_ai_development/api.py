@@ -9,13 +9,13 @@ from latest_ai_development.ingestion import retrieve_similar_docs
 import uvicorn
 
 app = FastAPI()
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # Replace with frontend URL in prod
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class BlogRequest(BaseModel):
     topic: str
@@ -40,4 +40,6 @@ def generate_blog(request: BlogRequest):
         raise HTTPException(status_code=500, detail=str(e))
 # Optional for local testing
 if __name__ == "__main__":
-    uvicorn.run("crew_blog_backend.api:app", host="0.0.0.0", port=8000, reload=True)
+    import os
+    port = int(os.environ.get("PORT", 8000))  # Use Render's port if available
+    uvicorn.run("crew_blog_backend.api:app", host="0.0.0.0", port=port, reload=True)
