@@ -1,18 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
-import { MessageSquare, Send, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { MessageSquare, Send, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const FloatingChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null); //refhook for scrolling to bottom of chat
 
   //scroll to the bottom of the chat whenever messages update
   useEffect(() => {
-    if (isOpen) { //only scroll if the chat window is open
+    if (isOpen) {
+      //only scroll if the chat window is open
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isOpen]);
@@ -20,55 +21,92 @@ const FloatingChatbot = () => {
   //initial welcome message when chat opens
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([{ sender: 'bot', text: 'Hi there! How can I help you today?' }]);
+      setMessages([
+        { sender: "bot", text: "Hi there! How can I help you today?" },
+      ]);
     }
-  }, [isOpen]); //only run when isOpen changes and messages are empty
+  }, [isOpen]);
 
   const sendMessage = async (messageText) => {
     if (!messageText.trim()) return;
 
-    const newUserMessage = { sender: 'user', text: messageText.trim() };
+    // Add user message to chat
+    const newUserMessage = { sender: "user", text: messageText.trim() };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-    setInputMessage('');
+    setInputMessage("");
 
-    setIsTyping(true); //show typing indicator
+    setIsTyping(true); // show typing indicator
 
-    const GEN_AI_SPECIALIST_API_URL = import.meta.env.VITE_BACKEND_API_URL + '/chatbot/send-message';
+    const GEN_AI_SPECIALIST_API_URL =
+      "https://6741708a4e56.ngrok-free.app/chatbot/send-message";
 
     try {
-      const response = await axios.post(GEN_AI_SPECIALIST_API_URL,{
+      const response = await axios.post(GEN_AI_SPECIALIST_API_URL, {
         prompt: messageText.trim(),
       });
 
-      const botReply = response.data.reply || "I received your message, but the response format was unexpected.";
-      const botResponse = { sender: 'bot', text: botReply };
-      setMessages((prevMessages) => [...prevMessages, botResponse]);
+      let botReply =
+        "I received your message, but the response format was unexpected.";
 
-    } catch (error) {
-      console.error('Error sending message to GEN AI specialist API:', error);
-      let errorMessage = 'Failed to get response from chatbot. Check console for details.';
-      if (error.response && error.response.data && error.response.data.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
+      // --- Extract the bot reply intelligently ---
+      const replyData = response.data?.reply;
+
+      if (replyData) {
+        if (typeof replyData === "string") {
+          // If reply is just a string
+          botReply = replyData;
+        } else if (Array.isArray(replyData.tasks_output)) {
+          // If reply has tasks_output array (like your case)
+          const editingTask = replyData.tasks_output.find(
+            (t) => t.name === "editing_task"
+          );
+          botReply =
+            editingTask?.raw || replyData.raw || JSON.stringify(replyData);
+        } else if (replyData.raw) {
+          // If reply is an object with raw
+          botReply = replyData.raw;
+        } else {
+          botReply = JSON.stringify(replyData);
+        }
       }
+
+      // Add bot message to chat
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", text: botReply },
+      ]);
+    } catch (error) {
+      console.error("Error sending message to GEN AI specialist API:", error);
+
+      let errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to get response from chatbot. Check console for details.";
+
       toast.error(errorMessage);
-      setMessages((prevMessages) => [...prevMessages, { sender: 'bot', text: 'Error: ' + errorMessage }]);
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", text: "Error: " + errorMessage },
+      ]);
     } finally {
       setIsTyping(false);
     }
   };
 
+  // Handle input changes
   const handleInputChange = (e) => {
     setInputMessage(e.target.value);
   };
 
+  // Handle send button click
   const handleSendClick = () => {
     sendMessage(inputMessage);
   };
 
+  // Handle Enter key press
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendClick();
     }
@@ -84,9 +122,9 @@ const FloatingChatbot = () => {
       <button
         onClick={toggleChatbot}
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 ease-in-out z-[1000] focus:outline-none focus:ring-4 focus:ring-blue-300"
-        aria-label={isOpen? "Close Chatbot" : "Open Chatbot"}
+        aria-label={isOpen ? "Close Chatbot" : "Open Chatbot"}
       >
-        {isOpen? <X size={28} /> : <MessageSquare size={28} />}
+        {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
       </button>
 
       {/*chatbot window */}
@@ -95,7 +133,11 @@ const FloatingChatbot = () => {
           {/*header */}
           <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-blue-600 text-white rounded-t-lg">
             <h3 className="text-lg font-semibold">NoteDown AI Chat</h3>
-            <button onClick={toggleChatbot} className="p-1 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Close Chat">
+            <button
+              onClick={toggleChatbot}
+              className="p-1 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              aria-label="Close Chat"
+            >
               <X size={20} />
             </button>
           </div>
@@ -110,13 +152,15 @@ const FloatingChatbot = () => {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${
+                  msg.sender === "user" ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
-                    msg.sender === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-none'
-                      : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-bl-none'
+                    msg.sender === "user"
+                      ? "bg-blue-600 text-white rounded-br-none"
+                      : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-bl-none"
                   }`}
                 >
                   {msg.text}
@@ -128,8 +172,12 @@ const FloatingChatbot = () => {
                 <div className="max-w-[80%] p-3 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded-bl-none">
                   Typing...
                   <span className="animate-pulse inline-block ml-1">. </span>
-                  <span className="animate-pulse inline-block ml-0.5 animation-delay-100">.</span>
-                  <span className="animate-pulse inline-block ml-0.5 animation-delay-200">.</span>
+                  <span className="animate-pulse inline-block ml-0.5 animation-delay-100">
+                    .
+                  </span>
+                  <span className="animate-pulse inline-block ml-0.5 animation-delay-200">
+                    .
+                  </span>
                 </div>
               </div>
             )}
@@ -142,7 +190,7 @@ const FloatingChatbot = () => {
               type="text"
               placeholder="Type your message..."
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-              value={inputMessage }
+              value={inputMessage}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               disabled={isTyping}
