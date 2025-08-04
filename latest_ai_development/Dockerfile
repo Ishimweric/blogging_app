@@ -1,21 +1,25 @@
+# Use official Python 3.11 slim image
 FROM python:3.11-slim
+
+# Prevent Python from writing .pyc files and enable stdout flushing
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install uv
 RUN pip install uv
 
-# Set a clean working directory (optional but neat)
+# Set working directory
 WORKDIR /code
 
-# Copy files
+# Copy project files
 COPY . .
 
-# Install dependencies with uv
+# Install Python dependencies with uv
 RUN uv pip install -r requirements.txt --system --no-cache-dir || \
     uv pip install . --system --no-cache-dir
 
-# Expose the port (if using FastAPI or similar)
-EXPOSE 8000
+# Expose default Render port
+EXPOSE 10000
 
-# Run your app (adjust this if your entry point is different)
-# CMD ["uvicorn", "src.latest_ai_development.api:app", "--host", "0.0.0.0", "--port", "8000"]
-CMD ["uvicorn", "src.latest_ai_development.api:app", "--host", "0.0.0.0", "--port", "10000"]
+# Start the FastAPI app using dynamic PORT from Render (fallback to 10000 locally)
+CMD ["sh", "-c", "uvicorn src.latest_ai_development.api:app --host 0.0.0.0 --port ${PORT:-10000}"]

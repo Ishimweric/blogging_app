@@ -41,5 +41,5 @@ def generate_blog(request: BlogRequest):
 # Optional for local testing
 if __name__ == "__main__":
     import os
-    port = int(os.environ.get("PORT", 8000))  # Use Render's port if available
+    port = int(os.environ.get("PORT", 10000))  # Use Render's port if available
     uvicorn.run("crew_blog_backend.api:app", host="0.0.0.0", port=port, reload=True)
