@@ -38,7 +38,7 @@ const FloatingChatbot = () => {
     setIsTyping(true); // show typing indicator
 
     const GEN_AI_SPECIALIST_API_URL =
-      "https://6741708a4e56.ngrok-free.app/chatbot/send-message";
+      "https://b451c5f7d7d7.ngrok-free.app/chatbot/send-message";
 
     try {
       const response = await axios.post(GEN_AI_SPECIALIST_API_URL, {
@@ -53,24 +53,20 @@ const FloatingChatbot = () => {
 
       if (replyData) {
         if (typeof replyData === "string") {
-          // If reply is just a string
           botReply = replyData;
         } else if (Array.isArray(replyData.tasks_output)) {
-          // If reply has tasks_output array (like your case)
           const editingTask = replyData.tasks_output.find(
             (t) => t.name === "editing_task"
           );
           botReply =
             editingTask?.raw || replyData.raw || JSON.stringify(replyData);
         } else if (replyData.raw) {
-          // If reply is an object with raw
           botReply = replyData.raw;
         } else {
           botReply = JSON.stringify(replyData);
         }
       }
 
-      // Add bot message to chat
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "bot", text: botReply },
@@ -94,17 +90,14 @@ const FloatingChatbot = () => {
     }
   };
 
-  // Handle input changes
   const handleInputChange = (e) => {
     setInputMessage(e.target.value);
   };
 
-  // Handle send button click
   const handleSendClick = () => {
     sendMessage(inputMessage);
   };
 
-  // Handle Enter key press
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -118,7 +111,6 @@ const FloatingChatbot = () => {
 
   return (
     <>
-      {/*floating chatbot cutton */}
       <button
         onClick={toggleChatbot}
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 ease-in-out z-[1000] focus:outline-none focus:ring-4 focus:ring-blue-300"
@@ -127,10 +119,8 @@ const FloatingChatbot = () => {
         {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
       </button>
 
-      {/*chatbot window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-full max-w-sm h-[70vh] bg-white dark:bg-gray-900 rounded-lg shadow-xl flex flex-col z-[999] border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out transform origin-bottom-right scale-100 opacity-100">
-          {/*header */}
           <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-blue-600 text-white rounded-t-lg">
             <h3 className="text-lg font-semibold">NoteDown AI Chat</h3>
             <button
@@ -142,7 +132,6 @@ const FloatingChatbot = () => {
             </button>
           </div>
 
-          {/* chat history */}
           <div className="flex-1 p-4 overflow-y-auto space-y-4 text-gray-800 dark:text-gray-200">
             {messages.length === 0 && !isTyping && (
               <div className="text-center text-gray-500 dark:text-gray-400 mt-10">
@@ -181,10 +170,9 @@ const FloatingChatbot = () => {
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} /> {/*scroll target */}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/*message input */}
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2">
             <input
               type="text"
