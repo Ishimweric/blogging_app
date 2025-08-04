@@ -38,7 +38,7 @@ const FloatingChatbot = () => {
     setIsTyping(true); // show typing indicator
 
     const GEN_AI_SPECIALIST_API_URL =
-      "https://b451c5f7d7d7.ngrok-free.app/chatbot/send-message";
+      "https://c481dcea6975.ngrok-free.app/chatbot/send-message";
 
     try {
       const response = await axios.post(GEN_AI_SPECIALIST_API_URL, {
