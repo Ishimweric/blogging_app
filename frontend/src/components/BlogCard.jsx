@@ -69,7 +69,7 @@ const BlogCard = ({ post, onSelectPost }) => {
           </h2>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
           <img src={post.avatar} alt="avatar" className="w-6 h-6 rounded-full" />
           <span>{post.author}</span>
           <span>•</span>
